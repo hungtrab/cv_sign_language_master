@@ -2,6 +2,109 @@
 
 Last reviewed: 2026-06-09
 
+## Repository Status For Teammates
+
+GitHub repository:
+
+```text
+https://github.com/hungtrab/cv_sign_language_master.git
+```
+
+This repo now includes source code, configs, notebooks, docs, tests, notes, and the two local demo checkpoints:
+
+```text
+runs/detector/weights/best.pt
+runs/classifier_resnet18/best.pt
+```
+
+The checkpoint files are tracked with Git LFS because they are binary model weights. Anyone cloning the project should install Git LFS first:
+
+```bash
+git lfs install
+git clone https://github.com/hungtrab/cv_sign_language_master.git
+cd cv_sign_language_master
+git lfs pull
+```
+
+If `git lfs pull` is skipped, the `.pt` files may be downloaded as tiny pointer files instead of real model weights, and the demo will fail when loading YOLO/classifier checkpoints.
+
+## What Has Already Been Done
+
+- Built a two-stage ASL recognition pipeline: webcam frame -> YOLO hand detector -> crop -> CNN classifier -> smoothing/debounce -> text buffer.
+- Added YOLO detector wrapper with single-class `hand` checkpoint validation.
+- Added CNN classifier inference wrapper.
+- Added OpenCV webcam demo and Gradio demo entry points.
+- Added smoothing, confidence threshold, margin threshold, cooldown, and neutral-frame re-arm logic to reduce repeated/spam letters.
+- Added debug crop dumping with key `d` in the OpenCV demo.
+- Added configs under `configs/`.
+- Added training/evaluation scripts under `scripts/`.
+- Added Colab notebooks for YOLO and classifier training under `notebooks/`.
+- Added unit tests for config, metrics, and pipeline behavior under `tests/`.
+- Added local demo weights for detector and classifier.
+
+## How To Run From A Fresh Clone
+
+Recommended environment:
+
+```text
+Python 3.10+ or 3.11 is safest.
+Webcam access is needed for the OpenCV demo.
+```
+
+Setup:
+
+```bash
+git lfs install
+git clone https://github.com/hungtrab/cv_sign_language_master.git
+cd cv_sign_language_master
+git lfs pull
+
+python -m venv .venv
+source .venv/bin/activate
+pip install -e ".[dev]"
+```
+
+Run tests:
+
+```bash
+pytest
+```
+
+Run OpenCV webcam demo:
+
+```bash
+python scripts/run_demo.py --config configs/demo.yaml
+```
+
+or:
+
+```bash
+make demo
+```
+
+Run Gradio web demo:
+
+```bash
+python -m signlang.demo.gradio_app
+```
+
+or:
+
+```bash
+make demo-web
+```
+
+OpenCV demo keys:
+
+```text
+q -> quit
+c -> clear current text buffer
+s -> save current text to output.txt
+d -> dump raw frame, crop, and prediction metadata to debug_crops/
+```
+
+If the webcam does not open, edit `camera_index` in `configs/demo.yaml`. Common values are `0`, `1`, or `2`.
+
 ## Current Project Shape
 
 This project is a two-stage real-time ASL alphabet recognizer:
