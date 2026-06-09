@@ -1,0 +1,38 @@
+experiment_name: cls_resnet18
+seed: 11711
+
+paths:
+  data_dir: data/asl_alphabet/asl_alphabet_train
+  test_dir: data/asl_alphabet/asl_alphabet_test
+  output_dir: runs/classifier_resnet18
+  class_names: configs/asl_classes.txt        # 29 lines, one class per line
+
+model:
+  arch: resnet18                              # resnet18 | mobilenet_v2
+  num_classes: 29
+  pretrained: true                             # ImageNet weights
+  freeze_backbone: false
+
+data:
+  image_size: 224
+  val_split: 0.15
+  augment:
+    horizontal_flip: false                    # not symmetric for letters
+    rotation_deg: 15
+    color_jitter: 0.2
+    gaussian_noise_std: 0.01
+
+training:
+  epochs: 20
+  batch_size: 64
+  num_workers: 4
+  learning_rate: 1.0e-3
+  weight_decay: 5.0e-4
+  warmup_epochs: 1
+  scheduler: cosine
+  amp: true
+  log_interval: 50
+
+evaluation:
+  metrics: [accuracy, macro_f1, top5_accuracy]
+  confusion_matrix: true

@@ -1,0 +1,15 @@
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+.pytest_cache/
+.ruff_cache/
+runs/
+data/asl_alphabet/
+data/hagrid_hand/
+data/yolo/images/
+data/yolo/labels/
+output.txt
+*.pt
+*.onnx
+.ipynb_checkpoints/

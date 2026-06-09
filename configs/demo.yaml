@@ -1,0 +1,31 @@
+experiment_name: demo
+
+paths:
+  detector_weights: runs/detector/weights/best.pt
+  classifier_weights: runs/classifier_resnet18/best.pt
+  class_names: configs/asl_classes.txt
+
+inference:
+  detection_conf_threshold: 0.5
+  classification_conf_threshold: 0.85
+  classification_margin_threshold: 0.20             # top-1 must beat top-2 by this margin
+  use_tracking: false
+  smoothing_window: 5                          # majority-vote over N frames
+  letter_repeat_cooldown_ms: 600                # debounce repeated A->A frames
+  require_neutral_between_letters: true          # prevent one held sign from spamming text
+  neutral_frames_to_reset: 3                     # no hand / nothing / uncertain frames to re-arm
+
+camera:
+  index: 0
+  width: 640
+  height: 480
+  fps: 30
+  mirror: false                              # keep classifier input orientation unchanged
+
+ui:
+  show_bbox: true
+  show_confidence: true
+  show_text_buffer: true
+  font_scale: 0.7
+  text_color: [40, 220, 40]
+  bbox_color: [0, 200, 255]

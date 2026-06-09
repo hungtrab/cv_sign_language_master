@@ -1,0 +1,46 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "signlang"
+version = "0.1.0"
+description = "Sign Language Detection & Recognition (CV 2025.2)"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [{ name = "CV 2025.2 — Hung, Vu, Tung" }]
+dependencies = [
+    "torch>=2.1",
+    "torchvision>=0.16",
+    "ultralytics>=8.1",
+    "opencv-python>=4.8",
+    "numpy>=1.26",
+    "pillow>=10.0",
+    "pyyaml>=6.0",
+    "tqdm>=4.66",
+    "gradio>=4.20",
+    "scikit-learn>=1.3",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0",
+    "ruff>=0.4",
+]
+mediapipe = ["mediapipe>=0.10"]    # optional fallback detector
+
+[project.scripts]
+signlang-demo = "scripts.run_demo:main"
+signlang-train-classifier = "scripts.train_classifier:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
