@@ -82,17 +82,30 @@ class ResNet18ASLRecognizer(BaseRecognizer):
         self._transform = build_inference_transform(image_size=image_size)
 
     def _build_label_map(self, mapping: dict) -> None:
-        if isinstance(mapping, dict):
-            idx_to_label = {}
-            for k, v in mapping.items():
-                try:
-                    idx_to_label[int(k)] = str(v).upper()
-                except (ValueError, TypeError):
-                    idx_to_label[int(v)] = str(k).upper()
-            max_idx = max(idx_to_label.keys()) + 1
-            self.class_names = [idx_to_label.get(i, f"UNK{i}") for i in range(max_idx)]
-        else:
+        if not isinstance(mapping, dict):
             self.class_names = AZ_CLASSES
+            return
+
+        # Handle nested format: {"class_to_idx": {...}, "idx_to_class": {...}}
+        if "idx_to_class" in mapping:
+            mapping = mapping["idx_to_class"]
+        elif "class_to_idx" in mapping:
+            mapping = {str(v): k for k, v in mapping["class_to_idx"].items()}
+
+        idx_to_label = {}
+        for k, v in mapping.items():
+            try:
+                idx_to_label[int(k)] = str(v).upper()
+            except (ValueError, TypeError):
+                try:
+                    idx_to_label[int(v)] = str(k).upper()
+                except (ValueError, TypeError):
+                    continue
+        if not idx_to_label:
+            self.class_names = AZ_CLASSES
+            return
+        max_idx = max(idx_to_label.keys()) + 1
+        self.class_names = [idx_to_label.get(i, f"UNK{i}") for i in range(max_idx)]
 
     @torch.no_grad()
     def predict(self, rep_output: RepresentationOutput) -> Prediction:
