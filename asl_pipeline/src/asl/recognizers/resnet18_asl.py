@@ -60,7 +60,15 @@ class ResNet18ASLRecognizer(BaseRecognizer):
         num_classes = len(self.class_names)
 
         self.model = resnet18(weights=None)
-        self.model.fc = torch.nn.Linear(self.model.fc.in_features, num_classes)
+        in_features = self.model.fc.in_features
+        # Match the checkpoint's FC structure: Dropout-Linear-ReLU-Dropout-Linear
+        self.model.fc = torch.nn.Sequential(
+            torch.nn.Dropout(0.5),
+            torch.nn.Linear(in_features, 512),
+            torch.nn.ReLU(),
+            torch.nn.Dropout(0.3),
+            torch.nn.Linear(512, num_classes),
+        )
 
         sd = torch.load(str(weights_path), map_location="cpu", weights_only=False)
         if "model_state_dict" in sd:
