@@ -170,11 +170,13 @@ def main():
     with open(metrics_dir / f"{prefix}_robustness.json", "w") as f:
         json.dump(results, f, indent=2)
 
-    # CSV with all required columns (eval doc §7.3)
+    # CSV with all required columns (eval doc §7.3) — append mode so multiple pipelines accumulate
     csv_path = metrics_dir / "robustness_summary.csv"
-    with open(csv_path, "w", newline="") as f:
+    write_header = not csv_path.exists()
+    with open(csv_path, "a", newline="") as f:
         writer = csv.writer(f)
-        writer.writerow([
+        if write_header:
+            writer.writerow([
             "pipeline", "corruption", "severity", "accuracy", "macro_f1",
             "accuracy_drop", "relative_accuracy_drop", "mean_confidence",
             "unknown_rate", "hand_detection_failure_rate",

@@ -21,16 +21,20 @@ class HFImageClassifier(BaseRecognizer):
 
     def __init__(self, *, model_name: Optional[str] = None):
         if model_name is None:
-            from ..utils.download import load_recognizer_with_fallback
-            info = load_recognizer_with_fallback()
-            if info["arch"] == "hf_transformers":
-                self.processor = info["processor"]
-                self.model = info["model"]
-                self.source = info["source"]
+            # Try HF-native models only (skip Option 1 which is a raw .pth)
+            from ..utils.download import download_model_option2, download_model_option3
+            for name, fn in [("Option 2", download_model_option2), ("Option 3", download_model_option3)]:
+                try:
+                    info = fn()
+                    self.processor = info["processor"]
+                    self.model = info["model"]
+                    self.source = info["source"]
+                    log.info(f"Loaded HF model via {name}: {self.source}")
+                    break
+                except Exception as e:
+                    log.warning(f"{name} failed: {e}")
             else:
-                raise RuntimeError(
-                    "Fallback returned a non-HF model. Use ResNet18ASLRecognizer instead."
-                )
+                raise RuntimeError("No HF Transformers model could be loaded (Options 2 and 3 failed).")
         else:
             self._load_model(model_name)
 

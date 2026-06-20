@@ -66,7 +66,7 @@ def register_defaults() -> None:
     register("raw_resnet18", RawImageRepresentation, TorchvisionClassifier)
     register("landmark_mlp", MediaPipeLandmarksRepresentation, LandmarkMLPRecognizer)
     register("mediapipe_landmarks_mlp", MediaPipeLandmarksRepresentation, LandmarkMLPRecognizer)
-    register("enhancement_clahe_resnet18", EnhancementRepresentation, TorchvisionClassifier,
+    register("enhancement_clahe_resnet18", EnhancementRepresentation, ResNet18ASLRecognizer,
              repr_kwargs={"method": "clahe"})
-    register("enhancement_gamma_resnet18", EnhancementRepresentation, TorchvisionClassifier,
+    register("enhancement_gamma_resnet18", EnhancementRepresentation, ResNet18ASLRecognizer,
              repr_kwargs={"method": "gamma"})
