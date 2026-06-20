@@ -51,3 +51,43 @@ def per_class_f1(preds, labels, *, num_classes: int) -> list[float]:
         f1 = 2 * prec * rec / (prec + rec) if (prec + rec) else 0.0
         f1s.append(f1)
     return f1s
+
+
+def per_class_precision(preds, labels, *, num_classes: int) -> list[float]:
+    cm = confusion_matrix(preds, labels, num_classes=num_classes)
+    precs = []
+    for c in range(num_classes):
+        tp = int(cm[c, c])
+        fp = int(cm[:, c].sum() - tp)
+        precs.append(tp / (tp + fp) if (tp + fp) else 0.0)
+    return precs
+
+
+def per_class_recall(preds, labels, *, num_classes: int) -> list[float]:
+    cm = confusion_matrix(preds, labels, num_classes=num_classes)
+    recs = []
+    for c in range(num_classes):
+        tp = int(cm[c, c])
+        fn = int(cm[c, :].sum() - tp)
+        recs.append(tp / (tp + fn) if (tp + fn) else 0.0)
+    return recs
+
+
+def weighted_f1(preds, labels, *, num_classes: int) -> float:
+    cm = confusion_matrix(preds, labels, num_classes=num_classes)
+    f1s = []
+    supports = []
+    for c in range(num_classes):
+        tp = int(cm[c, c])
+        fp = int(cm[:, c].sum() - tp)
+        fn = int(cm[c, :].sum() - tp)
+        support = int(cm[c, :].sum())
+        prec = tp / (tp + fp) if (tp + fp) else 0.0
+        rec = tp / (tp + fn) if (tp + fn) else 0.0
+        f1 = 2 * prec * rec / (prec + rec) if (prec + rec) else 0.0
+        f1s.append(f1)
+        supports.append(support)
+    total = sum(supports)
+    if total == 0:
+        return 0.0
+    return float(sum(f * s for f, s in zip(f1s, supports)) / total)

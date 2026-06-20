@@ -50,6 +50,12 @@ def apply_partial_occlusion(img: np.ndarray, fraction: float = 0.2) -> np.ndarra
     return result
 
 
+def apply_crop_shift(img: np.ndarray, shift_x: int = 20, shift_y: int = 20) -> np.ndarray:
+    h, w = img.shape[:2]
+    M = np.float32([[1, 0, shift_x], [0, 1, shift_y]])
+    return cv2.warpAffine(img, M, (w, h), borderMode=cv2.BORDER_REPLICATE)
+
+
 ALL_CORRUPTIONS = {
     "low_light": apply_low_light,
     "overexposure": apply_overexposure,
@@ -57,5 +63,6 @@ ALL_CORRUPTIONS = {
     "gaussian_noise": apply_gaussian_noise,
     "rotation": apply_rotation,
     "scale_shift": apply_scale_shift,
+    "crop_shift": apply_crop_shift,
     "partial_occlusion": apply_partial_occlusion,
 }

@@ -29,7 +29,10 @@ from PIL import Image
 from tqdm import tqdm
 
 from asl.pipelines.registry import build_pipeline, register_defaults
-from asl.evaluation.metrics import accuracy, macro_f1, per_class_f1, confusion_matrix
+from asl.evaluation.metrics import (
+    accuracy, macro_f1, per_class_f1, per_class_precision, per_class_recall,
+    weighted_f1, confusion_matrix,
+)
 from asl.evaluation.confusion import plot_confusion_matrix, save_predictions_csv
 from asl.postprocess.threshold import apply_confidence_threshold
 from asl.utils.config import load_class_names
@@ -224,6 +227,11 @@ def main():
         "top1_accuracy": round(accuracy(preds_np, gt_np), 4) if len(preds_np) > 0 else 0.0,
         "top3_accuracy": round(top3_acc, 4),
         "macro_f1": round(macro_f1(preds_np, gt_np, num_classes=len(class_names)), 4) if len(preds_np) > 0 else 0.0,
+        "weighted_f1": round(weighted_f1(preds_np, gt_np, num_classes=len(class_names)), 4) if len(preds_np) > 0 else 0.0,
+        "per_class_precision": {name: round(p, 4) for name, p in
+                                zip(class_names, per_class_precision(preds_np, gt_np, num_classes=len(class_names)))} if len(preds_np) > 0 else {},
+        "per_class_recall": {name: round(r, 4) for name, r in
+                             zip(class_names, per_class_recall(preds_np, gt_np, num_classes=len(class_names)))} if len(preds_np) > 0 else {},
         "per_class_f1": {name: round(f, 4) for name, f in
                          zip(class_names, per_class_f1(preds_np, gt_np, num_classes=len(class_names)))} if len(preds_np) > 0 else {},
         "mean_confidence": round(float(np.mean(confidences)), 4) if confidences else 0.0,
