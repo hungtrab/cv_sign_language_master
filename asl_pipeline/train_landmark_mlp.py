@@ -14,15 +14,33 @@ import numpy as np
 
 
 def load_dataset(path: str):
+    import csv
     labels, features = [], []
     with open(path, "r", encoding="utf-8") as f:
-        for line in f:
-            line = line.strip()
-            if not line:
-                continue
-            parts = line.split(",")
-            labels.append(parts[0].upper())
-            features.append([float(v) for v in parts[1:]])
+        reader = csv.reader(f)
+        header = next(reader, None)
+        # Detect format: extract_landmarks.py outputs label,image_path,hand_detected,f0..f41
+        # cv2 format is label,f0..f41 (no header)
+        if header and header[0] == "label" and "hand_detected" in header:
+            feat_start = header.index("f0")
+            for row in reader:
+                if row[2].lower() != "true":
+                    continue
+                labels.append(row[0].upper())
+                features.append([float(v) for v in row[feat_start:]])
+        else:
+            # Simple CSV: label,f0,...,f41 (no header, or first row is data)
+            if header:
+                try:
+                    features.append([float(v) for v in header[1:]])
+                    labels.append(header[0].upper())
+                except ValueError:
+                    pass
+            for row in reader:
+                if not row:
+                    continue
+                labels.append(row[0].upper())
+                features.append([float(v) for v in row[1:]])
     if not features:
         raise SystemExit(f"No samples found in {path}")
     return np.array(features, dtype=np.float32), np.array(labels)
