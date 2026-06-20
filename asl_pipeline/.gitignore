@@ -1,0 +1,11 @@
+__pycache__/
+*.pyc
+*.egg-info/
+.venv/
+weights/
+outputs/
+debug_crops/
+*.pt
+*.pth
+*.pkl
+.ruff_cache/

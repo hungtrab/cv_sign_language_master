@@ -1,0 +1,169 @@
+pipelines:
+  raw_resnet18:
+    input: image
+    representation:
+      type: raw_image
+      input_size: 224
+    recognizer:
+      type: torchvision_classifier
+      backbone: resnet18
+      num_classes: 26
+      weights: null
+    postprocess:
+      confidence_threshold: 0.5
+      smoothing: none
+
+  raw_siglip:
+    input: image
+    representation:
+      type: raw_image
+      input_size: 224
+    recognizer:
+      type: hf_image_classifier
+      repo_id: prithivMLmods/Alphabet-Sign-Language-Detection
+    postprocess:
+      confidence_threshold: 0.5
+      smoothing: none
+
+  mediapipe_crop_resnet18:
+    input: image
+    representation:
+      type: mediapipe_crop
+      hand_model_path: weights/hand_landmarker.task
+      padding_px: 32
+      input_size: 224
+    recognizer:
+      type: resnet18_asl
+      repo_id: huzaifanasirrr/realtime-sign-language-translator
+      weights_file: best_model.pth
+      class_mapping_file: class_mapping.json
+    postprocess:
+      confidence_threshold: 0.5
+      smoothing:
+        type: majority_vote
+        window: 7
+
+  mediapipe_crop_vit:
+    input: image
+    representation:
+      type: mediapipe_crop
+      padding_px: 32
+      input_size: 224
+    recognizer:
+      type: hf_image_classifier
+      repo_id: prithivMLmods/Alphabet-Sign-Language-Detection
+    postprocess:
+      confidence_threshold: 0.5
+      smoothing:
+        type: majority_vote
+        window: 7
+
+  mediapipe_landmarks_mlp:
+    input: image
+    representation:
+      type: mediapipe_landmarks
+      normalize: true
+      mirror_left_hand: true
+      output_dim: 42
+    recognizer:
+      type: landmark_mlp
+      checkpoint: weights/landmark_mlp.pkl
+      num_classes: 26
+    postprocess:
+      confidence_threshold: 0.5
+      smoothing:
+        type: majority_vote
+        window: 7
+
+  enhancement_clahe_resnet18:
+    input: image
+    representation:
+      type: enhancement
+      method: clahe
+      input_size: 224
+    recognizer:
+      type: torchvision_classifier
+      backbone: resnet18
+      num_classes: 26
+    postprocess:
+      confidence_threshold: 0.5
+      smoothing: none
+
+  enhancement_gamma_resnet18:
+    input: image
+    representation:
+      type: enhancement
+      method: gamma
+      gamma: 1.5
+      input_size: 224
+    recognizer:
+      type: torchvision_classifier
+      backbone: resnet18
+      num_classes: 26
+    postprocess:
+      confidence_threshold: 0.5
+      smoothing: none
+
+  yolo11_crop_resnet18:
+    input: image
+    representation:
+      type: yolo_crop
+      model_path: weights/yolo11_hand_detector.pt
+      padding_px: 32
+      input_size: 224
+    recognizer:
+      type: torchvision_classifier
+      backbone: resnet18
+      num_classes: 26
+    postprocess:
+      confidence_threshold: 0.5
+      smoothing:
+        type: majority_vote
+        window: 7
+
+  yolo11_direct_detection:
+    input: image
+    representation:
+      type: none
+    recognizer:
+      type: yolo_direct_detector
+      model_path: weights/yolo11_asl_letters.pt
+      num_classes: 26
+    postprocess:
+      confidence_threshold: 0.5
+      smoothing:
+        type: majority_vote
+        window: 7
+
+  segmentation_resnet18:
+    input: image
+    representation:
+      type: hand_segmentation
+      segmenter: sam_or_yolo11seg
+      mask_mode: apply_mask_and_crop
+      input_size: 224
+    recognizer:
+      type: torchvision_classifier
+      backbone: resnet18
+      num_classes: 26
+    postprocess:
+      confidence_threshold: 0.5
+      smoothing: none
+
+  fusion_rgb_landmarks:
+    input: image
+    representation:
+      type: fusion_rgb_landmarks
+      cropper: mediapipe_crop
+      landmark_extractor: mediapipe_landmarks
+      input_size: 224
+    recognizer:
+      type: fusion_classifier
+      rgb_backbone: resnet18
+      landmark_backbone: mlp
+      num_classes: 26
+    postprocess:
+      confidence_threshold: 0.5
+      smoothing:
+        type: majority_vote
+        window: 7

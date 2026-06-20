@@ -1,0 +1,29 @@
+pipeline:
+  name: mediapipe_resnet18
+
+paths:
+  class_names: configs/asl_classes_az.txt
+  weights_dir: weights
+
+inference:
+  confidence_threshold: 0.5
+  smoothing_window: 7
+  commit_frames: 10
+  letter_repeat_cooldown_ms: 600
+  require_neutral_between_letters: true
+  neutral_frames_to_reset: 3
+
+camera:
+  index: 0
+  width: 960
+  height: 540
+  fps: 30
+  mirror: true
+
+ui:
+  show_bbox: true
+  show_confidence: true
+  show_text_buffer: true
+  font_scale: 0.7
+  text_color: [40, 220, 40]
+  bbox_color: [0, 200, 255]
