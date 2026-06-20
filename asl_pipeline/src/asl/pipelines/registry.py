@@ -57,16 +57,35 @@ def register_defaults() -> None:
     from ..recognizers.hf_image_classifier import HFImageClassifier
     from ..recognizers.landmark_mlp import LandmarkMLPRecognizer
     from ..recognizers.torchvision_classifier import TorchvisionClassifier
+    from ..recognizers.landmark_sklearn import LandmarkSVMRecognizer, LandmarkRFRecognizer
 
+    # === P1: Raw image → classifier (classifier backbone ablation) ===
+    register("raw_hf", RawImageRepresentation, HFImageClassifier)
+    register("raw_siglip", RawImageRepresentation, HFImageClassifier)
+    register("raw_resnet18", RawImageRepresentation, ResNet18ASLRecognizer)
+
+    # === P2: Hand crop → classifier (detector swap + classifier swap) ===
     register("mediapipe_resnet18", MediaPipeCropRepresentation, ResNet18ASLRecognizer)
     register("mediapipe_crop_resnet18", MediaPipeCropRepresentation, ResNet18ASLRecognizer)
     register("mediapipe_crop_vit", MediaPipeCropRepresentation, HFImageClassifier)
-    register("raw_hf", RawImageRepresentation, HFImageClassifier)
-    register("raw_siglip", RawImageRepresentation, HFImageClassifier)
-    register("raw_resnet18", RawImageRepresentation, TorchvisionClassifier)
+
+    # === P3: Landmarks → classifier (landmark classifier swap) ===
     register("landmark_mlp", MediaPipeLandmarksRepresentation, LandmarkMLPRecognizer)
     register("mediapipe_landmarks_mlp", MediaPipeLandmarksRepresentation, LandmarkMLPRecognizer)
+    register("mediapipe_landmarks_svm", MediaPipeLandmarksRepresentation, LandmarkSVMRecognizer)
+    register("mediapipe_landmarks_rf", MediaPipeLandmarksRepresentation, LandmarkRFRecognizer)
+
+    # === P6: Enhancement → classifier (enhancement swap) ===
+    register("no_enhance_resnet18", RawImageRepresentation, ResNet18ASLRecognizer)
     register("enhancement_clahe_resnet18", EnhancementRepresentation, ResNet18ASLRecognizer,
              repr_kwargs={"method": "clahe"})
     register("enhancement_gamma_resnet18", EnhancementRepresentation, ResNet18ASLRecognizer,
+             repr_kwargs={"method": "gamma"})
+    register("enhancement_sharpen_resnet18", EnhancementRepresentation, ResNet18ASLRecognizer,
+             repr_kwargs={"method": "sharpening"})
+    register("enhancement_denoise_resnet18", EnhancementRepresentation, ResNet18ASLRecognizer,
+             repr_kwargs={"method": "denoising"})
+    register("enhancement_clahe_vit", EnhancementRepresentation, HFImageClassifier,
+             repr_kwargs={"method": "clahe"})
+    register("enhancement_gamma_vit", EnhancementRepresentation, HFImageClassifier,
              repr_kwargs={"method": "gamma"})
