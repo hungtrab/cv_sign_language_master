@@ -62,9 +62,13 @@ class ResNet18ASLRecognizer(BaseRecognizer):
         self.model = resnet18(weights=None)
         self.model.fc = torch.nn.Linear(self.model.fc.in_features, num_classes)
 
-        sd = torch.load(str(weights_path), map_location="cpu", weights_only=True)
-        if "model" in sd and isinstance(sd["model"], dict):
+        sd = torch.load(str(weights_path), map_location="cpu", weights_only=False)
+        if "model_state_dict" in sd:
+            sd = sd["model_state_dict"]
+        elif "model" in sd and isinstance(sd["model"], dict):
             sd = sd["model"]
+        elif "state_dict" in sd:
+            sd = sd["state_dict"]
         sd = _clean_state_dict(sd)
 
         try:
