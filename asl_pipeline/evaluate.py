@@ -197,6 +197,8 @@ def main():
     preds_np = np.array(valid_preds)
     gt_np = np.array(valid_gts)
     latencies_np = np.array(latencies)
+    # Number of classes actually present in the evaluated subset
+    num_eval_classes = len(class_names)
 
     # Top-3 accuracy
     top3_correct = 0

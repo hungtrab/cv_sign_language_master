@@ -32,11 +32,14 @@ def macro_f1(preds, labels, *, num_classes: int) -> float:
         tp = int(cm[c, c])
         fp = int(cm[:, c].sum() - tp)
         fn = int(cm[c, :].sum() - tp)
+        support = int(cm[c, :].sum())
+        if support == 0 and fp == 0:
+            continue
         prec = tp / (tp + fp) if (tp + fp) else 0.0
         rec = tp / (tp + fn) if (tp + fn) else 0.0
         f1 = 2 * prec * rec / (prec + rec) if (prec + rec) else 0.0
         f1s.append(f1)
-    return float(np.mean(f1s))
+    return float(np.mean(f1s)) if f1s else 0.0
 
 
 def per_class_f1(preds, labels, *, num_classes: int) -> list[float]:
