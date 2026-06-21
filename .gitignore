@@ -20,3 +20,4 @@ output.txt
 !runs/classifier_resnet18/best.pt
 *.onnx
 .ipynb_checkpoints/
+.DS_Store
