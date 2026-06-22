@@ -49,70 +49,63 @@ def build_pipeline(
 
 
 def register_defaults() -> None:
-    from ..representations.mediapipe_crop import MediaPipeCropRepresentation
     from ..representations.mediapipe_landmarks import MediaPipeLandmarksRepresentation
-    from ..representations.raw_image import RawImageRepresentation
-    from ..representations.enhancement import EnhancementRepresentation
-    from ..recognizers.resnet18_asl import ResNet18ASLRecognizer
-    from ..recognizers.hf_image_classifier import HFImageClassifier
-    from ..recognizers.landmark_mlp import LandmarkMLPRecognizer
-    from ..recognizers.torchvision_classifier import TorchvisionClassifier
-    from ..recognizers.landmark_sklearn import LandmarkSVMRecognizer, LandmarkRFRecognizer
-
-    # === P1: Raw image → classifier (classifier backbone ablation) ===
-    register("raw_hf", RawImageRepresentation, HFImageClassifier)
-    register("raw_siglip", RawImageRepresentation, HFImageClassifier)
-    register("raw_resnet18", RawImageRepresentation, ResNet18ASLRecognizer)
-
-    # === P2: Hand crop → classifier (detector swap + classifier swap) ===
-    register("mediapipe_resnet18", MediaPipeCropRepresentation, ResNet18ASLRecognizer)
-    register("mediapipe_crop_resnet18", MediaPipeCropRepresentation, ResNet18ASLRecognizer)
-    register("mediapipe_crop_vit", MediaPipeCropRepresentation, HFImageClassifier)
-
-    # YOLO hand crop → classifier
+    from ..representations.mmpose_landmarks import MMPoseLandmarksRepresentation
     from ..representations.yolo_crop import YOLOCropRepresentation
+    from ..representations.enhanced_chain import EnhancedLandmarksRepresentation, EnhancedCropRepresentation
+    from ..recognizers.landmark_mlp import LandmarkMLPRecognizer
+    from ..recognizers.landmark_xgboost import LandmarkXGBoostRecognizer
+    from ..recognizers.resnet18_asl import ResNet18ASLRecognizer
+
     YOLO_WEIGHTS = "weights/yolo_hand.pt"
-    register("yolo_crop_resnet18", YOLOCropRepresentation, ResNet18ASLRecognizer,
-             repr_kwargs={"model_path": YOLO_WEIGHTS})
-    register("yolo_crop_vit", YOLOCropRepresentation, HFImageClassifier,
-             repr_kwargs={"model_path": YOLO_WEIGHTS})
+    ENHANCEMENTS = ["raw", "clahe", "gamma", "sharpening", "zero_dce"]
 
-    # === Enhanced chains: RGB → Enhancement → Crop/Landmarks → Classifier ===
-    from ..representations.enhanced_chain import EnhancedCropRepresentation, EnhancedLandmarksRepresentation
+    for enh in ENHANCEMENTS:
+        prefix = enh
 
-    # CLAHE → MediaPipe crop → ResNet18
-    register("clahe_mediapipe_crop_resnet18", EnhancedCropRepresentation, ResNet18ASLRecognizer,
-             repr_kwargs={"enhancement": "clahe", "cropper": "mediapipe"})
-    # CLAHE → MediaPipe crop → ViT/SigLIP
-    register("clahe_mediapipe_crop_vit", EnhancedCropRepresentation, HFImageClassifier,
-             repr_kwargs={"enhancement": "clahe", "cropper": "mediapipe"})
-    # CLAHE → MediaPipe landmarks → MLP
-    register("clahe_mediapipe_landmarks_mlp", EnhancedLandmarksRepresentation, LandmarkMLPRecognizer,
-             repr_kwargs={"enhancement": "clahe"})
-    # CLAHE → YOLO crop → ResNet18
-    register("clahe_yolo_crop_resnet18", EnhancedCropRepresentation, ResNet18ASLRecognizer,
-             repr_kwargs={"enhancement": "clahe", "cropper": "yolo", "model_path": YOLO_WEIGHTS})
-    # Gamma → MediaPipe crop → ResNet18
-    register("gamma_mediapipe_crop_resnet18", EnhancedCropRepresentation, ResNet18ASLRecognizer,
-             repr_kwargs={"enhancement": "gamma", "cropper": "mediapipe"})
+        # --- MediaPipe Landmarks → MLP ---
+        if enh == "raw":
+            register(f"{prefix}_mp_mlp",
+                     MediaPipeLandmarksRepresentation, LandmarkMLPRecognizer)
+        else:
+            register(f"{prefix}_mp_mlp",
+                     EnhancedLandmarksRepresentation, LandmarkMLPRecognizer,
+                     repr_kwargs={"enhancement": enh, "pose_backend": "mediapipe"})
 
-    # === P3: Landmarks → classifier (landmark classifier swap) ===
-    register("landmark_mlp", MediaPipeLandmarksRepresentation, LandmarkMLPRecognizer)
-    register("mediapipe_landmarks_mlp", MediaPipeLandmarksRepresentation, LandmarkMLPRecognizer)
-    register("mediapipe_landmarks_svm", MediaPipeLandmarksRepresentation, LandmarkSVMRecognizer)
-    register("mediapipe_landmarks_rf", MediaPipeLandmarksRepresentation, LandmarkRFRecognizer)
+        # --- MediaPipe Landmarks → XGBoost ---
+        if enh == "raw":
+            register(f"{prefix}_mp_xgb",
+                     MediaPipeLandmarksRepresentation, LandmarkXGBoostRecognizer)
+        else:
+            register(f"{prefix}_mp_xgb",
+                     EnhancedLandmarksRepresentation, LandmarkXGBoostRecognizer,
+                     repr_kwargs={"enhancement": enh, "pose_backend": "mediapipe"})
 
-    # === P6: Enhancement → classifier (enhancement swap) ===
-    register("no_enhance_resnet18", RawImageRepresentation, ResNet18ASLRecognizer)
-    register("enhancement_clahe_resnet18", EnhancementRepresentation, ResNet18ASLRecognizer,
-             repr_kwargs={"method": "clahe"})
-    register("enhancement_gamma_resnet18", EnhancementRepresentation, ResNet18ASLRecognizer,
-             repr_kwargs={"method": "gamma"})
-    register("enhancement_sharpen_resnet18", EnhancementRepresentation, ResNet18ASLRecognizer,
-             repr_kwargs={"method": "sharpening"})
-    register("enhancement_denoise_resnet18", EnhancementRepresentation, ResNet18ASLRecognizer,
-             repr_kwargs={"method": "denoising"})
-    register("enhancement_clahe_vit", EnhancementRepresentation, HFImageClassifier,
-             repr_kwargs={"method": "clahe"})
-    register("enhancement_gamma_vit", EnhancementRepresentation, HFImageClassifier,
-             repr_kwargs={"method": "gamma"})
+        # --- MMPose Landmarks → MLP ---
+        if enh == "raw":
+            register(f"{prefix}_mmpose_mlp",
+                     MMPoseLandmarksRepresentation, LandmarkMLPRecognizer)
+        else:
+            register(f"{prefix}_mmpose_mlp",
+                     EnhancedLandmarksRepresentation, LandmarkMLPRecognizer,
+                     repr_kwargs={"enhancement": enh, "pose_backend": "mmpose"})
+
+        # --- MMPose Landmarks → XGBoost ---
+        if enh == "raw":
+            register(f"{prefix}_mmpose_xgb",
+                     MMPoseLandmarksRepresentation, LandmarkXGBoostRecognizer)
+        else:
+            register(f"{prefix}_mmpose_xgb",
+                     EnhancedLandmarksRepresentation, LandmarkXGBoostRecognizer,
+                     repr_kwargs={"enhancement": enh, "pose_backend": "mmpose"})
+
+        # --- YOLOv11 Crop → ResNet18 ---
+        if enh == "raw":
+            register(f"{prefix}_yolo_resnet18",
+                     YOLOCropRepresentation, ResNet18ASLRecognizer,
+                     repr_kwargs={"model_path": YOLO_WEIGHTS})
+        else:
+            register(f"{prefix}_yolo_resnet18",
+                     EnhancedCropRepresentation, ResNet18ASLRecognizer,
+                     repr_kwargs={"enhancement": enh, "cropper": "yolo",
+                                  "model_path": YOLO_WEIGHTS})

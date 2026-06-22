@@ -31,11 +31,18 @@ def apply_denoising(img: np.ndarray, h: float = 10.0) -> np.ndarray:
     return cv2.fastNlMeansDenoisingColored(img, None, h, h, 7, 21)
 
 
+def apply_zero_dce(img: np.ndarray) -> np.ndarray:
+    from .zero_dce import apply_zero_dce as _apply
+    device = "cuda" if __import__("torch").cuda.is_available() else "cpu"
+    return _apply(img, device=device)
+
+
 ENHANCEMENT_METHODS = {
     "clahe": apply_clahe,
     "gamma": apply_gamma,
     "sharpening": apply_sharpening,
     "denoising": apply_denoising,
+    "zero_dce": apply_zero_dce,
 }
 
 

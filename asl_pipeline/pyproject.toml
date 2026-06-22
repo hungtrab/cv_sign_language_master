@@ -20,6 +20,7 @@ dependencies = [
     "PyYAML>=6.0",
     "tqdm>=4.60.0",
     "matplotlib>=3.7.0",
+    "xgboost>=2.0.0",
 ]
 
 [project.optional-dependencies]

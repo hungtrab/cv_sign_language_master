@@ -5,14 +5,9 @@ from typing import Optional
 import numpy as np
 
 from .base import BaseRepresentation, RepresentationOutput
-from .enhancement import apply_clahe, apply_gamma, apply_sharpening, apply_denoising
+from .enhancement import ENHANCEMENT_METHODS
 
-ENHANCE_FNS = {
-    "clahe": apply_clahe,
-    "gamma": apply_gamma,
-    "sharpening": apply_sharpening,
-    "denoising": apply_denoising,
-}
+ENHANCE_FNS = ENHANCEMENT_METHODS
 
 
 class EnhancedCropRepresentation(BaseRepresentation):
@@ -53,17 +48,24 @@ class EnhancedCropRepresentation(BaseRepresentation):
 
 
 class EnhancedLandmarksRepresentation(BaseRepresentation):
-    """RGB → Enhancement → MediaPipe Landmarks → 42-dim features."""
+    """RGB → Enhancement → Pose Estimator → 42-dim features."""
     name = "enhanced_landmarks"
     output_type = "features"
 
-    def __init__(self, *, enhancement: str = "clahe", **kwargs):
+    def __init__(self, *, enhancement: str = "clahe", pose_backend: str = "mediapipe", **kwargs):
         self.enhancement = enhancement
         self.enhance_fn = ENHANCE_FNS[enhancement]
 
-        from .mediapipe_landmarks import MediaPipeLandmarksRepresentation
-        self._landmarker = MediaPipeLandmarksRepresentation()
-        self.name = f"enhanced_{enhancement}_landmarks"
+        if pose_backend == "mediapipe":
+            from .mediapipe_landmarks import MediaPipeLandmarksRepresentation
+            self._landmarker = MediaPipeLandmarksRepresentation()
+        elif pose_backend == "mmpose":
+            from .mmpose_landmarks import MMPoseLandmarksRepresentation
+            self._landmarker = MMPoseLandmarksRepresentation(**kwargs)
+        else:
+            raise ValueError(f"Unknown pose_backend: {pose_backend}")
+
+        self.name = f"enhanced_{enhancement}_{pose_backend}_landmarks"
 
     def process(self, frame_rgb: np.ndarray) -> Optional[RepresentationOutput]:
         enhanced = self.enhance_fn(frame_rgb)
@@ -76,4 +78,5 @@ class EnhancedLandmarksRepresentation(BaseRepresentation):
         return self._landmarker.visualize(frame, output)
 
     def close(self) -> None:
-        self._landmarker.close()
+        if hasattr(self._landmarker, "close"):
+            self._landmarker.close()
