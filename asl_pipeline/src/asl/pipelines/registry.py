@@ -77,6 +77,25 @@ def register_defaults() -> None:
     register("yolo_crop_vit", YOLOCropRepresentation, HFImageClassifier,
              repr_kwargs={"model_path": YOLO_WEIGHTS})
 
+    # === Enhanced chains: RGB → Enhancement → Crop/Landmarks → Classifier ===
+    from ..representations.enhanced_chain import EnhancedCropRepresentation, EnhancedLandmarksRepresentation
+
+    # CLAHE → MediaPipe crop → ResNet18
+    register("clahe_mediapipe_crop_resnet18", EnhancedCropRepresentation, ResNet18ASLRecognizer,
+             repr_kwargs={"enhancement": "clahe", "cropper": "mediapipe"})
+    # CLAHE → MediaPipe crop → ViT/SigLIP
+    register("clahe_mediapipe_crop_vit", EnhancedCropRepresentation, HFImageClassifier,
+             repr_kwargs={"enhancement": "clahe", "cropper": "mediapipe"})
+    # CLAHE → MediaPipe landmarks → MLP
+    register("clahe_mediapipe_landmarks_mlp", EnhancedLandmarksRepresentation, LandmarkMLPRecognizer,
+             repr_kwargs={"enhancement": "clahe"})
+    # CLAHE → YOLO crop → ResNet18
+    register("clahe_yolo_crop_resnet18", EnhancedCropRepresentation, ResNet18ASLRecognizer,
+             repr_kwargs={"enhancement": "clahe", "cropper": "yolo", "model_path": YOLO_WEIGHTS})
+    # Gamma → MediaPipe crop → ResNet18
+    register("gamma_mediapipe_crop_resnet18", EnhancedCropRepresentation, ResNet18ASLRecognizer,
+             repr_kwargs={"enhancement": "gamma", "cropper": "mediapipe"})
+
     # === P3: Landmarks → classifier (landmark classifier swap) ===
     register("landmark_mlp", MediaPipeLandmarksRepresentation, LandmarkMLPRecognizer)
     register("mediapipe_landmarks_mlp", MediaPipeLandmarksRepresentation, LandmarkMLPRecognizer)
