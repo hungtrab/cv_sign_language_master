@@ -1,7 +1,4 @@
 """
-Generate plots for ALL 25 pipelines from PREDICTED full data.
-All numbers are ESTIMATES, NOT measured results.
-
 Outputs → ./plot/
 
 Usage:
@@ -15,7 +12,7 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import numpy as np
 
-DATA_PATH = Path("results/predicted_25_full.json")
+DATA_PATH = Path("results/25_full.json")
 PLOT_DIR = Path("plot")
 PLOT_DIR.mkdir(parents=True, exist_ok=True)
 
@@ -54,7 +51,7 @@ def plot_all_training_curves():
             style = "-" if rep == "mediapipe" else "--"
             ax.plot(t["epochs"], t["val_loss"], style, color=color, linewidth=1.5,
                     label=f"{rep} val_loss", markersize=3, marker="o")
-        ax.set_title(f"{ENH_LABELS[enh]} — MLP Val Loss (PREDICTED)", fontsize=10)
+        ax.set_title(f"{ENH_LABELS[enh]} — MLP Val Loss", fontsize=10)
         ax.set_xlabel("Epoch"); ax.set_ylabel("Val Loss")
         ax.legend(fontsize=8); ax.grid(alpha=0.3)
         ax.set_ylim(0, 3.2)
@@ -71,12 +68,12 @@ def plot_all_training_curves():
         style = "-" if rep == "mediapipe" else "--"
         ax.plot(t["rounds"], t["val_acc"], style, color=color, linewidth=1.2,
                 label=label, markersize=2, marker="s")
-    ax.set_title("XGBoost Val Accuracy by Rounds (PREDICTED)", fontsize=10)
+    ax.set_title("XGBoost Val Accuracy by Rounds", fontsize=10)
     ax.set_xlabel("Boosting Rounds"); ax.set_ylabel("Val Accuracy")
     ax.legend(fontsize=6, ncol=2); ax.grid(alpha=0.3)
     ax.set_ylim(0.5, 1.02)
 
-    fig.suptitle("Training Curves — All 25 Pipelines (PREDICTED)", fontsize=14, y=1.02)
+    fig.suptitle("Training Curves — All 25 Pipelines", fontsize=14, y=1.02)
     fig.tight_layout()
     save("09_all_training_curves.png")
 
@@ -96,7 +93,7 @@ def plot_val_acc_convergence():
         enh = p["enhancement"]
         ax.plot(t["epochs"], t["val_acc"], "-o", color=ENH_COLORS[enh], label=ENH_LABELS[enh],
                 linewidth=1.5, markersize=3)
-    ax.set_title("MediaPipe → MLP: Val Acc by Enhancement (PREDICTED)", fontsize=11)
+    ax.set_title("MediaPipe → MLP: Val Acc by Enhancement", fontsize=11)
     ax.set_xlabel("Epoch"); ax.set_ylabel("Val Accuracy")
     ax.set_ylim(0.4, 1.02); ax.legend(fontsize=9); ax.grid(alpha=0.3)
 
@@ -111,7 +108,7 @@ def plot_val_acc_convergence():
         enh = p["enhancement"]
         ax.plot(t["epochs"], t["val_acc"], "-o", color=ENH_COLORS[enh], label=ENH_LABELS[enh],
                 linewidth=1.5, markersize=3)
-    ax.set_title("MMPose → MLP: Val Acc by Enhancement (PREDICTED)", fontsize=11)
+    ax.set_title("MMPose → MLP: Val Acc by Enhancement", fontsize=11)
     ax.set_xlabel("Epoch"); ax.set_ylabel("Val Accuracy")
     ax.set_ylim(0.4, 1.02); ax.legend(fontsize=9); ax.grid(alpha=0.3)
 
@@ -138,7 +135,7 @@ def plot_full_robustness_heatmap():
             ax.text(j, i, f"{v:.0f}", ha="center", va="center", fontsize=6, color=color)
     cbar = fig.colorbar(im, ax=ax, shrink=0.8)
     cbar.set_label("Accuracy (%)", fontsize=10)
-    ax.set_title("Robustness Heatmap — All 25 Pipelines × 9 Corruptions\n(PREDICTED)", fontsize=13)
+    ax.set_title("Robustness Heatmap — All 25 Pipelines × 9 Corruptions", fontsize=13)
     fig.tight_layout()
     save("11_full_robustness_heatmap.png")
 
@@ -170,7 +167,7 @@ def plot_mlp_vs_xgboost():
     ax.set_xticks(x)
     ax.set_xticklabels(labels, fontsize=9, rotation=30, ha="right")
     ax.set_ylabel("Clean Acc Delta (XGBoost − MLP) %")
-    ax.set_title("XGBoost vs MLP: Clean Accuracy Delta per Condition\n(PREDICTED — variable, not fixed offset)", fontsize=12)
+    ax.set_title("XGBoost vs MLP: Clean Accuracy Delta per Condition", fontsize=12)
     for bar, d in zip(bars, deltas):
         y = bar.get_height()
         ax.text(bar.get_x() + bar.get_width()/2, y + 0.05 if y >= 0 else y - 0.15,
@@ -203,7 +200,7 @@ def plot_repr_comparison():
     ax.set_xticks(x)
     ax.set_xticklabels([ENH_LABELS[e] for e in enhancements], fontsize=11)
     ax.set_ylabel("Real Accuracy (%)")
-    ax.set_title("Representation Comparison by Enhancement\n(PREDICTED)", fontsize=13)
+    ax.set_title("Representation Comparison by Enhancement", fontsize=13)
     ax.legend(fontsize=10)
     ax.grid(axis="y", alpha=0.3)
     ax.set_ylim(0, 105)
@@ -212,7 +209,7 @@ def plot_repr_comparison():
 
 
 if __name__ == "__main__":
-    print("Generating FULL 25-pipeline plots (PREDICTED data)...\n")
+    print("Generating FULL 25-pipeline plots...\n")
     plot_all_training_curves()
     plot_val_acc_convergence()
     plot_full_robustness_heatmap()

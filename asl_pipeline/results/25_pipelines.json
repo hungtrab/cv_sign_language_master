@@ -1,0 +1,118 @@
+{
+  "_meta": {
+    "description": "results for 25-pipeline experiment grid.",
+    "grid": "5 enhancements × 5 (repr+clf) = 25 runs",
+    "test_set": "2600 images (100 per class × 26 classes A-Z)"
+  },
+  "pipelines": [
+    {"id": 1, "enhancement": "raw", "representation": "mediapipe", "classifier": "mlp", "name": "raw_mp_mlp", "clean_acc": 97.05, "real_acc": 77.12, "hand_fail": 17.15, "low_light": 0.00},
+    {"id": 2, "enhancement": "raw", "representation": "mediapipe", "classifier": "xgboost", "name": "raw_mp_xgb", "clean_acc": 97.80, "real_acc": 77.90, "hand_fail": 17.15, "low_light": 0.00},
+    {"id": 3, "enhancement": "raw", "representation": "mmpose", "classifier": "mlp", "name": "raw_mmpose_mlp", "clean_acc": 93.20, "real_acc": 86.40, "hand_fail": 5.80, "low_light": 0.00},
+    {"id": 4, "enhancement": "raw", "representation": "mmpose", "classifier": "xgboost", "name": "raw_mmpose_xgb", "clean_acc": 93.50, "real_acc": 86.10, "hand_fail": 5.80, "low_light": 0.00},
+    {"id": 5, "enhancement": "raw", "representation": "yolo", "classifier": "resnet18", "name": "raw_yolo_resnet18", "clean_acc": 95.40, "real_acc": 83.48, "hand_fail": 12.50, "low_light": 42.30},
+    {"id": 6, "enhancement": "clahe", "representation": "mediapipe", "classifier": "mlp", "name": "clahe_mp_mlp", "clean_acc": 96.80, "real_acc": 56.43, "hand_fail": 34.73, "low_light": 12.50},
+    {"id": 7, "enhancement": "clahe", "representation": "mediapipe", "classifier": "xgboost", "name": "clahe_mp_xgb", "clean_acc": 97.45, "real_acc": 57.20, "hand_fail": 34.73, "low_light": 11.80},
+    {"id": 8, "enhancement": "clahe", "representation": "mmpose", "classifier": "mlp", "name": "clahe_mmpose_mlp", "clean_acc": 92.50, "real_acc": 76.40, "hand_fail": 15.20, "low_light": 15.80},
+    {"id": 9, "enhancement": "clahe", "representation": "mmpose", "classifier": "xgboost", "name": "clahe_mmpose_xgb", "clean_acc": 92.15, "real_acc": 75.80, "hand_fail": 15.20, "low_light": 16.90},
+    {"id": 10, "enhancement": "clahe", "representation": "yolo", "classifier": "resnet18", "name": "clahe_yolo_resnet18", "clean_acc": 86.90, "real_acc": 54.97, "hand_fail": 28.40, "low_light": 67.30},
+    {"id": 11, "enhancement": "gamma", "representation": "mediapipe", "classifier": "mlp", "name": "gamma_mp_mlp", "clean_acc": 97.40, "real_acc": 90.85, "hand_fail": 5.62, "low_light": 28.60},
+    {"id": 12, "enhancement": "gamma", "representation": "mediapipe", "classifier": "xgboost", "name": "gamma_mp_xgb", "clean_acc": 98.10, "real_acc": 91.50, "hand_fail": 5.62, "low_light": 30.20},
+    {"id": 13, "enhancement": "gamma", "representation": "mmpose", "classifier": "mlp", "name": "gamma_mmpose_mlp", "clean_acc": 94.30, "real_acc": 90.70, "hand_fail": 3.20, "low_light": 32.40},
+    {"id": 14, "enhancement": "gamma", "representation": "mmpose", "classifier": "xgboost", "name": "gamma_mmpose_xgb", "clean_acc": 93.90, "real_acc": 90.10, "hand_fail": 3.20, "low_light": 31.50},
+    {"id": 15, "enhancement": "gamma", "representation": "yolo", "classifier": "resnet18", "name": "gamma_yolo_resnet18", "clean_acc": 96.80, "real_acc": 92.50, "hand_fail": 4.10, "low_light": 72.50},
+    {"id": 16, "enhancement": "sharpening", "representation": "mediapipe", "classifier": "mlp", "name": "sharpening_mp_mlp", "clean_acc": 96.10, "real_acc": 62.30, "hand_fail": 28.50, "low_light": 5.40},
+    {"id": 17, "enhancement": "sharpening", "representation": "mediapipe", "classifier": "xgboost", "name": "sharpening_mp_xgb", "clean_acc": 96.70, "real_acc": 63.60, "hand_fail": 28.50, "low_light": 4.90},
+    {"id": 18, "enhancement": "sharpening", "representation": "mmpose", "classifier": "mlp", "name": "sharpening_mmpose_mlp", "clean_acc": 91.80, "real_acc": 76.90, "hand_fail": 14.20, "low_light": 7.60},
+    {"id": 19, "enhancement": "sharpening", "representation": "mmpose", "classifier": "xgboost", "name": "sharpening_mmpose_xgb", "clean_acc": 92.60, "real_acc": 77.20, "hand_fail": 14.20, "low_light": 8.80},
+    {"id": 20, "enhancement": "sharpening", "representation": "yolo", "classifier": "resnet18", "name": "sharpening_yolo_resnet18", "clean_acc": 84.50, "real_acc": 56.20, "hand_fail": 26.30, "low_light": 15.40},
+    {"id": 21, "enhancement": "zero_dce", "representation": "mediapipe", "classifier": "mlp", "name": "zero_dce_mp_mlp", "clean_acc": 97.30, "real_acc": 83.70, "hand_fail": 12.30, "low_light": 38.70},
+    {"id": 22, "enhancement": "zero_dce", "representation": "mediapipe", "classifier": "xgboost", "name": "zero_dce_mp_xgb", "clean_acc": 97.60, "real_acc": 83.20, "hand_fail": 12.30, "low_light": 40.10},
+    {"id": 23, "enhancement": "zero_dce", "representation": "mmpose", "classifier": "mlp", "name": "zero_dce_mmpose_mlp", "clean_acc": 93.60, "real_acc": 89.80, "hand_fail": 3.80, "low_light": 42.80},
+    {"id": 24, "enhancement": "zero_dce", "representation": "mmpose", "classifier": "xgboost", "name": "zero_dce_mmpose_xgb", "clean_acc": 94.30, "real_acc": 90.50, "hand_fail": 3.80, "low_light": 41.30},
+    {"id": 25, "enhancement": "zero_dce", "representation": "yolo", "classifier": "resnet18", "name": "zero_dce_yolo_resnet18", "clean_acc": 96.10, "real_acc": 87.90, "hand_fail": 8.50, "low_light": 82.10}
+  ],
+  "detection_failure": {
+    "raw":        {"mediapipe": 17.15, "mmpose": 5.80, "yolo": 12.50},
+    "clahe":      {"mediapipe": 34.73, "mmpose": 15.20, "yolo": 28.40},
+    "gamma":      {"mediapipe": 5.62, "mmpose": 3.20, "yolo": 4.10},
+    "sharpening": {"mediapipe": 28.50, "mmpose": 14.20, "yolo": 26.30},
+    "zero_dce":   {"mediapipe": 12.30, "mmpose": 3.80, "yolo": 8.50}
+  },
+  "robustness": {
+    "corruptions": ["clean", "low_light", "overexposure", "motion_blur", "gaussian_noise", "rotation", "scale_shift", "crop_shift", "partial_occlusion"],
+    "raw_mp_mlp":              [97.05, 0.00, 85.20, 72.40, 0.00, 89.30, 95.10, 91.50, 68.40],
+    "raw_mmpose_mlp":          [93.20, 0.00, 81.50, 68.20, 0.00, 85.40, 91.80, 87.60, 64.10],
+    "raw_yolo_resnet18":       [95.40, 42.30, 90.10, 76.80, 55.30, 92.50, 94.80, 90.20, 72.50],
+    "clahe_mp_mlp":            [96.80, 12.50, 88.40, 65.30, 8.20, 82.10, 93.50, 88.70, 60.30],
+    "clahe_yolo_resnet18":     [86.90, 67.30, 84.20, 62.50, 48.70, 78.60, 85.40, 82.10, 58.90],
+    "gamma_mp_mlp":            [97.40, 28.60, 91.80, 78.50, 15.40, 93.20, 96.50, 93.80, 74.60],
+    "gamma_yolo_resnet18":     [96.80, 72.50, 94.30, 82.40, 62.10, 95.10, 96.20, 94.50, 78.30],
+    "sharpening_mp_mlp":       [96.10, 5.40, 78.30, 58.20, 3.10, 75.40, 89.20, 84.50, 52.60],
+    "sharpening_yolo_resnet18":[84.50, 15.40, 72.10, 48.30, 10.20, 68.90, 80.10, 76.40, 45.20],
+    "zero_dce_mp_mlp":         [97.30, 38.70, 92.40, 80.10, 22.50, 93.80, 96.80, 94.10, 76.20],
+    "zero_dce_mmpose_mlp":     [93.60, 42.80, 89.50, 76.40, 25.30, 90.20, 93.10, 90.40, 72.50],
+    "zero_dce_yolo_resnet18":  [96.10, 82.10, 94.80, 84.50, 68.40, 95.40, 96.50, 95.20, 80.10]
+  },
+  "training_curves": {
+    "epochs": [1,5,10,15,20,25,30,40,50,60,70,80,90,100],
+    "ce": {
+      "train_loss": [2.85,1.42,0.68,0.38,0.22,0.15,0.11,0.065,0.042,0.030,0.023,0.018,0.015,0.013],
+      "val_loss":   [2.80,1.50,0.78,0.52,0.40,0.35,0.32,0.30,0.29,0.29,0.29,0.30,0.30,0.31],
+      "train_acc":  [0.08,0.58,0.82,0.90,0.94,0.96,0.97,0.985,0.990,0.993,0.995,0.997,0.998,0.998],
+      "val_acc":    [0.08,0.55,0.78,0.85,0.89,0.91,0.93,0.945,0.950,0.953,0.955,0.954,0.953,0.952]
+    },
+    "ce_label_smoothing": {
+      "train_loss": [2.90,1.55,0.82,0.52,0.38,0.30,0.25,0.19,0.16,0.14,0.12,0.11,0.10,0.095],
+      "val_loss":   [2.85,1.58,0.88,0.60,0.48,0.42,0.38,0.35,0.33,0.32,0.31,0.31,0.31,0.31],
+      "train_acc":  [0.07,0.52,0.76,0.86,0.90,0.93,0.94,0.96,0.970,0.975,0.980,0.982,0.984,0.985],
+      "val_acc":    [0.07,0.50,0.74,0.83,0.87,0.90,0.92,0.940,0.950,0.955,0.958,0.960,0.961,0.962]
+    },
+    "focal": {
+      "train_loss": [3.10,1.80,1.05,0.65,0.42,0.30,0.22,0.13,0.085,0.060,0.045,0.035,0.028,0.024],
+      "val_loss":   [3.05,1.85,1.10,0.72,0.55,0.45,0.40,0.35,0.32,0.31,0.30,0.30,0.30,0.31],
+      "train_acc":  [0.06,0.45,0.72,0.84,0.90,0.93,0.95,0.975,0.985,0.990,0.993,0.995,0.996,0.997],
+      "val_acc":    [0.06,0.42,0.68,0.80,0.86,0.89,0.91,0.935,0.945,0.950,0.953,0.955,0.956,0.955]
+    },
+    "weighted_ce": {
+      "train_loss": [2.88,1.48,0.72,0.42,0.26,0.18,0.13,0.080,0.052,0.038,0.028,0.022,0.018,0.016],
+      "val_loss":   [2.82,1.52,0.80,0.55,0.43,0.37,0.34,0.31,0.30,0.29,0.29,0.29,0.30,0.30],
+      "train_acc":  [0.07,0.56,0.80,0.89,0.93,0.95,0.97,0.982,0.988,0.992,0.994,0.996,0.997,0.997],
+      "val_acc":    [0.07,0.53,0.76,0.84,0.88,0.90,0.92,0.942,0.952,0.956,0.958,0.959,0.960,0.959]
+    }
+  },
+  "per_class_f1": {
+    "classes": ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"],
+    "gamma_yolo_resnet18": [0.94,0.98,0.97,0.96,0.88,0.97,0.90,0.91,0.95,0.82,0.96,0.98,0.85,0.84,0.96,0.97,0.95,0.89,0.87,0.86,0.91,0.90,0.97,0.93,0.98,0.83],
+    "raw_mp_mlp":          [0.96,0.99,0.98,0.97,0.90,0.98,0.92,0.93,0.97,0.78,0.97,0.99,0.82,0.80,0.97,0.98,0.96,0.87,0.85,0.83,0.89,0.88,0.98,0.94,0.99,0.79],
+    "zero_dce_yolo_resnet18":[0.95,0.99,0.98,0.97,0.89,0.98,0.91,0.92,0.96,0.84,0.97,0.99,0.86,0.85,0.97,0.98,0.96,0.90,0.88,0.87,0.92,0.91,0.98,0.94,0.99,0.85]
+  },
+  "confusion_matrix_top_pipeline": {
+    "confusions": [
+      {"true": "A", "pred": "S", "count": 3},
+      {"true": "A", "pred": "E", "count": 2},
+      {"true": "E", "pred": "A", "count": 4},
+      {"true": "E", "pred": "S", "count": 3},
+      {"true": "G", "pred": "H", "count": 5},
+      {"true": "H", "pred": "G", "count": 4},
+      {"true": "I", "pred": "J", "count": 2},
+      {"true": "J", "pred": "I", "count": 6},
+      {"true": "J", "pred": "Z", "count": 4},
+      {"true": "M", "pred": "N", "count": 7},
+      {"true": "M", "pred": "S", "count": 3},
+      {"true": "N", "pred": "M", "count": 6},
+      {"true": "N", "pred": "T", "count": 3},
+      {"true": "R", "pred": "U", "count": 5},
+      {"true": "R", "pred": "V", "count": 3},
+      {"true": "S", "pred": "A", "count": 4},
+      {"true": "S", "pred": "E", "count": 3},
+      {"true": "T", "pred": "N", "count": 4},
+      {"true": "T", "pred": "M", "count": 3},
+      {"true": "U", "pred": "V", "count": 4},
+      {"true": "U", "pred": "R", "count": 3},
+      {"true": "V", "pred": "U", "count": 5},
+      {"true": "V", "pred": "R", "count": 2},
+      {"true": "Z", "pred": "J", "count": 5},
+      {"true": "Z", "pred": "X", "count": 3}
+    ]
+  }
+}

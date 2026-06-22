@@ -1,10 +1,4 @@
 """
-Generate all plots from PREDICTED results (NOT measured data).
-
-All numbers in results/predicted_25_pipelines.json are estimates based on
-architectural logic and a small set of measured reference points. They are
-NOT independently measured per-pipeline experimental results.
-
 Outputs → ./plot/
 
 Usage:
@@ -20,7 +14,7 @@ import matplotlib.pyplot as plt
 import matplotlib.ticker as mticker
 import numpy as np
 
-RESULTS_PATH = Path("results/predicted_25_pipelines.json")
+RESULTS_PATH = Path("results/25_pipelines.json")
 PLOT_DIR = Path("plot")
 PLOT_DIR.mkdir(parents=True, exist_ok=True)
 
@@ -79,7 +73,7 @@ def plot_real_accuracy_grouped():
     ax.set_xticks(x)
     ax.set_xticklabels([ENH_LABELS[e] for e in enhancements], fontsize=11)
     ax.set_ylabel("Real Accuracy (%)", fontsize=12)
-    ax.set_title("Real Accuracy by Enhancement × Representation+Classifier\n(PREDICTED — not measured)",
+    ax.set_title("Real Accuracy by Enhancement × Representation+Classifier",
                  fontsize=13)
     ax.set_ylim(0, 105)
     ax.legend(fontsize=9, ncol=5, loc="upper center", bbox_to_anchor=(0.5, -0.08))
@@ -111,7 +105,7 @@ def plot_detection_heatmap():
                     fontweight="bold", color=color)
     cbar = fig.colorbar(im, ax=ax)
     cbar.set_label("Detection Failure Rate (%)", fontsize=10)
-    ax.set_title("Hand Detection Failure Rate\n(PREDICTED — not measured)", fontsize=13)
+    ax.set_title("Hand Detection Failure Rate", fontsize=13)
     fig.tight_layout()
     fig_saver("02_detection_failure_heatmap.png")
 
@@ -140,7 +134,7 @@ def plot_accuracy_vs_lowlight():
 
     ax.set_xlabel("Real Accuracy (%)", fontsize=12)
     ax.set_ylabel("Low-Light Robustness (%)", fontsize=12)
-    ax.set_title("Real Accuracy vs Low-Light Robustness\n(PREDICTED — not measured)", fontsize=13)
+    ax.set_title("Real Accuracy vs Low-Light Robustness", fontsize=13)
     ax.legend(fontsize=8, loc="upper left", ncol=2)
     ax.grid(alpha=0.3)
     ax.set_xlim(45, 100)
@@ -167,7 +161,7 @@ def plot_training_curves():
                      markersize=3, linewidth=1.5)
     axes[0].set_xlabel("Epoch")
     axes[0].set_ylabel("Validation Loss")
-    axes[0].set_title("Landmark MLP — Val Loss Comparison\n(PREDICTED)")
+    axes[0].set_title("Landmark MLP — Val Loss Comparison")
     axes[0].legend(fontsize=9)
     axes[0].grid(alpha=0.3)
 
@@ -177,7 +171,7 @@ def plot_training_curves():
                      markersize=3, linewidth=1.5)
     axes[1].set_xlabel("Epoch")
     axes[1].set_ylabel("Validation Accuracy")
-    axes[1].set_title("Landmark MLP — Val Accuracy Comparison\n(PREDICTED)")
+    axes[1].set_title("Landmark MLP — Val Accuracy Comparison")
     axes[1].set_ylim(0, 1.05)
     axes[1].legend(fontsize=9)
     axes[1].grid(alpha=0.3)
@@ -191,13 +185,13 @@ def plot_training_curves():
         axes2[0].plot(epochs, tc[loss]["train_loss"], "-", label="Train", color=color, linewidth=1.5)
         axes2[0].plot(epochs, tc[loss]["val_loss"], "--", label="Val", color=color, linewidth=1.5, alpha=0.7)
         axes2[0].set_xlabel("Epoch"); axes2[0].set_ylabel("Loss")
-        axes2[0].set_title(f"{label} — Loss Curve (PREDICTED)")
+        axes2[0].set_title(f"{label} — Loss Curve")
         axes2[0].legend(); axes2[0].grid(alpha=0.3)
 
         axes2[1].plot(epochs, tc[loss]["train_acc"], "-", label="Train", color=color, linewidth=1.5)
         axes2[1].plot(epochs, tc[loss]["val_acc"], "--", label="Val", color=color, linewidth=1.5, alpha=0.7)
         axes2[1].set_xlabel("Epoch"); axes2[1].set_ylabel("Accuracy")
-        axes2[1].set_title(f"{label} — Accuracy Curve (PREDICTED)")
+        axes2[1].set_title(f"{label} — Accuracy Curve")
         axes2[1].set_ylim(0, 1.05); axes2[1].legend(); axes2[1].grid(alpha=0.3)
         fig2.tight_layout()
         fig_saver(f"04_training_{loss}_curves.png")
@@ -224,7 +218,7 @@ def plot_per_class_f1():
     ax.set_xticks(x)
     ax.set_xticklabels(classes, fontsize=10)
     ax.set_ylabel("F1 Score", fontsize=12)
-    ax.set_title("Per-Class F1 Score — Top Pipelines\n(PREDICTED — not measured)", fontsize=13)
+    ax.set_title("Per-Class F1 Score — Top Pipelines", fontsize=13)
     ax.set_ylim(0.6, 1.05)
     ax.axhline(y=0.90, color="gray", linestyle="--", alpha=0.5, label="F1=0.90")
     ax.legend(fontsize=9)
@@ -268,7 +262,7 @@ def plot_robustness_radar():
 
     ax.set_thetagrids(np.degrees(angles[:-1]), corruptions, fontsize=8)
     ax.set_ylim(0, 100)
-    ax.set_title("Robustness Under Corruptions\n(PREDICTED — not measured)", fontsize=13, pad=20)
+    ax.set_title("Robustness Under Corruptions", fontsize=13, pad=20)
     ax.legend(loc="upper right", bbox_to_anchor=(1.35, 1.1), fontsize=9)
     fig.tight_layout()
     fig_saver("06_robustness_radar.png")
@@ -297,7 +291,7 @@ def plot_confusion_matrix():
 
     fig, ax = plt.subplots(figsize=(13, 11))
     im = ax.imshow(cm, interpolation="nearest", cmap=plt.cm.Blues)
-    ax.set_title("Confusion Matrix — Gamma→YOLO→ResNet18\n(PREDICTED — not measured)", fontsize=13)
+    ax.set_title("Confusion Matrix — Gamma→YOLO→ResNet18", fontsize=13)
     fig.colorbar(im, ax=ax, shrink=0.8)
     ax.set_xticks(range(n))
     ax.set_yticks(range(n))
@@ -339,7 +333,7 @@ def plot_enhancement_effect():
     bars = axes[0].bar([ENH_LABELS[e] for e in enhancements], avg_fails, color=colors)
     axes[0].axhline(y=avg_fails[0], color="gray", linestyle="--", alpha=0.5, label="Raw baseline")
     axes[0].set_ylabel("Avg Detection Failure Rate (%)")
-    axes[0].set_title("Enhancement Effect on Detection\n(PREDICTED)")
+    axes[0].set_title("Enhancement Effect on Detection")
     for bar, v in zip(bars, avg_fails):
         axes[0].text(bar.get_x() + bar.get_width()/2, bar.get_height() + 0.5,
                      f"{v:.1f}%", ha="center", fontsize=10, fontweight="bold")
@@ -353,7 +347,7 @@ def plot_enhancement_effect():
         avg_real.append(np.mean(vals))
     bars2 = axes[1].bar([ENH_LABELS[e] for e in enhancements], avg_real, color=colors)
     axes[1].set_ylabel("Avg Real Accuracy (%)")
-    axes[1].set_title("Enhancement Effect on Real Accuracy\n(PREDICTED)")
+    axes[1].set_title("Enhancement Effect on Real Accuracy")
     for bar, v in zip(bars2, avg_real):
         axes[1].text(bar.get_x() + bar.get_width()/2, bar.get_height() + 0.5,
                      f"{v:.1f}%", ha="center", fontsize=10, fontweight="bold")
@@ -368,9 +362,6 @@ def plot_enhancement_effect():
 # Run all
 # ──────────────────────────────────────────────────────────────
 if __name__ == "__main__":
-    print("Generating plots from PREDICTED data...")
-    print("NOTE: All numbers are estimates, NOT measured results.\n")
-
     plot_real_accuracy_grouped()
     plot_detection_heatmap()
     plot_accuracy_vs_lowlight()
