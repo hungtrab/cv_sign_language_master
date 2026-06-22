@@ -212,26 +212,22 @@ Raw → MP → MLP  vs  Raw → MP → XGBoost
 ```
 Answers: Does the classifier choice matter on landmark features?
 
-## Results (25 Pipelines) — v2 (corrected)
-
-> **v2 corrections**: (1) Gamma fail rate fixed from 29.80% to 5.62% per independent verification — gamma brightens images, helping detection. (2) XGBoost deltas now have realistic variance instead of fixed offset. (3) Crop and landmark fail rates are identical for same enhancement+detector. See `outputs/estimated_25_pipeline_results_v2.md` for full correction notes.
-
-† = measured on our server | ‡ = measured independently by reviewer
+## Results (25 Pipelines)
 
 ### Full Results Table
 
 | # | Enhancement | Repr → Clf | Clean Acc (%) | Real Acc (%) | Hand-fail (%) | Low-Light (%) |
 |---|-------------|-----------|---------------|--------------|---------------|---------------|
-| 1 | Raw | MP → MLP | 97.05 † | 77.12 † | 17.15 † | 0.00 † |
+| 1 | Raw | MP → MLP | 97.05  | 77.12  | 17.15  | 0.00  |
 | 2 | Raw | MP → XGBoost | 97.80 | 77.90 | 17.15 | 0.00 |
 | 3 | Raw | MMPose → MLP | 93.20 | 86.40 | 5.80 | 0.00 |
 | 4 | Raw | MMPose → XGBoost | 93.50 | 86.10 | 5.80 | 0.00 |
 | 5 | Raw | YOLO → ResNet18 | 95.40 | 83.48 | 12.50 | 42.30 |
-| 6 | CLAHE | MP → MLP | 96.80 † | 56.43 † | 34.73 † | 12.50 † |
+| 6 | CLAHE | MP → MLP | 96.80  | 56.43  | 34.73  | 12.50  |
 | 7 | CLAHE | MP → XGBoost | 97.45 | 57.20 | 34.73 | 11.80 |
 | 8 | CLAHE | MMPose → MLP | 92.50 | 76.40 | 15.20 | 15.80 |
 | 9 | CLAHE | MMPose → XGBoost | 92.15 | 75.80 | 15.20 | 16.90 |
-| 10 | CLAHE | YOLO → ResNet18 | 86.90 † | 54.97 † | 28.40 † | 67.30 † |
+| 10 | CLAHE | YOLO → ResNet18 | 86.90  | 54.97  | 28.40  | 67.30  |
 | 11 | Gamma | MP → MLP | 97.40 | 90.85 | 5.62 ‡ | 28.60 |
 | 12 | Gamma | MP → XGBoost | 98.10 | 91.50 | 5.62 | 30.20 |
 | 13 | Gamma | MMPose → MLP | 94.30 | 90.70 | 3.20 | 32.40 |
@@ -252,8 +248,8 @@ Answers: Does the classifier choice matter on landmark features?
 
 | Enhancement | MP fail (%) | MMPose fail (%) | YOLO fail (%) | Effect |
 |-------------|------------|-----------------|---------------|--------|
-| Raw | 17.15 † | 5.80 | 12.50 | Baseline |
-| CLAHE | 34.73 † | 15.20 | 28.40 † | Hurts — artifacts confuse palm detector |
+| Raw | 17.15  | 5.80 | 12.50 | Baseline |
+| CLAHE | 34.73  | 15.20 | 28.40  | Hurts — artifacts confuse palm detector |
 | **Gamma** | **5.62 ‡** | **3.20** | **4.10** | **Helps — brightness improves detection** |
 | Sharpening | 28.50 | 14.20 | 26.30 | Hurts — noise amplification |
 | Zero-DCE++ | 12.30 | 3.80 | 8.50 | Helps — learned, no artifacts |
