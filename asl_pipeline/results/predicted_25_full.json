@@ -1,0 +1,283 @@
+{
+  "_meta": {
+    "description": "PREDICTED full results for all 25 pipelines. NOT measured data.",
+    "version": "v2-full",
+    "corruptions": ["clean","low_light","overexposure","motion_blur","gaussian_noise","rotation","scale_shift","crop_shift","partial_occlusion"]
+  },
+  "pipelines": [
+    {
+      "id": 1, "name": "raw_mp_mlp", "enhancement": "raw", "representation": "mediapipe", "classifier": "mlp",
+      "clean_acc": 97.05, "real_acc": 77.12, "hand_fail": 17.15, "source": "measured",
+      "robustness": [97.05, 0.00, 85.20, 72.40, 0.00, 89.30, 95.10, 91.50, 68.40],
+      "training": {
+        "epochs": [1,5,10,15,20,25,30,40,50,60,70,80,90,100],
+        "train_loss": [2.85,1.42,0.68,0.38,0.22,0.15,0.11,0.065,0.042,0.030,0.023,0.018,0.015,0.013],
+        "val_loss":   [2.80,1.50,0.78,0.52,0.40,0.35,0.32,0.30,0.29,0.29,0.29,0.30,0.30,0.31],
+        "train_acc":  [0.08,0.58,0.82,0.90,0.94,0.96,0.97,0.985,0.990,0.993,0.995,0.997,0.998,0.998],
+        "val_acc":    [0.08,0.55,0.78,0.85,0.89,0.91,0.93,0.945,0.950,0.953,0.955,0.954,0.953,0.952],
+        "loss_fn": "ce", "note": "MLP 256-128-64, lr=1e-3, landmark 42-dim"
+      }
+    },
+    {
+      "id": 2, "name": "raw_mp_xgb", "enhancement": "raw", "representation": "mediapipe", "classifier": "xgboost",
+      "clean_acc": 97.80, "real_acc": 77.90, "hand_fail": 17.15, "source": "predicted",
+      "robustness": [97.80, 0.00, 85.90, 73.10, 0.00, 90.10, 95.80, 92.30, 69.50],
+      "training": {
+        "note": "XGBoost: n_estimators=200, no epoch-based training curve. Reporting boosting rounds.",
+        "rounds": [10,30,50,80,100,130,160,200],
+        "train_acc": [0.72,0.91,0.96,0.985,0.993,0.997,0.999,1.000],
+        "val_acc":   [0.70,0.88,0.93,0.955,0.962,0.968,0.972,0.978],
+        "loss_fn": "mlogloss"
+      }
+    },
+    {
+      "id": 3, "name": "raw_mmpose_mlp", "enhancement": "raw", "representation": "mmpose", "classifier": "mlp",
+      "clean_acc": 93.20, "real_acc": 86.40, "hand_fail": 5.80, "source": "predicted",
+      "robustness": [93.20, 0.00, 81.50, 68.20, 0.00, 85.40, 91.80, 87.60, 64.10],
+      "training": {
+        "epochs": [1,5,10,15,20,25,30,40,50,60,70,80,90,100],
+        "train_loss": [2.92,1.58,0.82,0.50,0.32,0.22,0.16,0.095,0.062,0.045,0.035,0.028,0.023,0.020],
+        "val_loss":   [2.88,1.65,0.90,0.62,0.48,0.42,0.38,0.35,0.34,0.34,0.34,0.35,0.35,0.36],
+        "train_acc":  [0.06,0.50,0.75,0.86,0.91,0.94,0.96,0.978,0.985,0.990,0.993,0.995,0.996,0.997],
+        "val_acc":    [0.06,0.47,0.71,0.81,0.86,0.88,0.90,0.918,0.925,0.928,0.930,0.931,0.931,0.932],
+        "loss_fn": "ce", "note": "MMPose landmarks noisier than MediaPipe → lower val acc plateau"
+      }
+    },
+    {
+      "id": 4, "name": "raw_mmpose_xgb", "enhancement": "raw", "representation": "mmpose", "classifier": "xgboost",
+      "clean_acc": 93.50, "real_acc": 86.10, "hand_fail": 5.80, "source": "predicted",
+      "robustness": [93.50, 0.00, 81.80, 68.50, 0.00, 85.70, 92.10, 87.90, 64.50],
+      "training": {
+        "rounds": [10,30,50,80,100,130,160,200],
+        "train_acc": [0.68,0.87,0.93,0.970,0.982,0.990,0.995,0.998],
+        "val_acc":   [0.65,0.84,0.90,0.920,0.928,0.932,0.934,0.935],
+        "loss_fn": "mlogloss"
+      }
+    },
+    {
+      "id": 5, "name": "raw_yolo_resnet18", "enhancement": "raw", "representation": "yolo", "classifier": "resnet18",
+      "clean_acc": 95.40, "real_acc": 83.48, "hand_fail": 12.50, "source": "predicted",
+      "robustness": [95.40, 42.30, 90.10, 76.80, 55.30, 92.50, 94.80, 90.20, 72.50],
+      "training": {
+        "note": "ResNet18 pretrained from HuggingFace — no training performed, inference only",
+        "pretrained": true
+      }
+    },
+    {
+      "id": 6, "name": "clahe_mp_mlp", "enhancement": "clahe", "representation": "mediapipe", "classifier": "mlp",
+      "clean_acc": 96.80, "real_acc": 56.43, "hand_fail": 34.73, "source": "measured",
+      "robustness": [96.80, 12.50, 88.40, 65.30, 8.20, 82.10, 93.50, 88.70, 60.30],
+      "training": {
+        "epochs": [1,5,10,15,20,25,30,40,50,60,70,80,90,100],
+        "train_loss": [2.88,1.45,0.70,0.40,0.24,0.16,0.12,0.070,0.045,0.032,0.025,0.020,0.016,0.014],
+        "val_loss":   [2.83,1.52,0.80,0.54,0.42,0.37,0.33,0.31,0.30,0.30,0.30,0.31,0.31,0.32],
+        "train_acc":  [0.07,0.56,0.80,0.89,0.93,0.96,0.97,0.983,0.988,0.992,0.994,0.996,0.997,0.998],
+        "val_acc":    [0.07,0.53,0.76,0.84,0.88,0.90,0.92,0.940,0.948,0.951,0.953,0.952,0.951,0.950],
+        "loss_fn": "ce", "note": "CLAHE-enhanced landmarks — similar training curve to raw"
+      }
+    },
+    {
+      "id": 7, "name": "clahe_mp_xgb", "enhancement": "clahe", "representation": "mediapipe", "classifier": "xgboost",
+      "clean_acc": 97.45, "real_acc": 57.20, "hand_fail": 34.73, "source": "predicted",
+      "robustness": [97.45, 11.80, 89.10, 66.00, 7.80, 82.80, 94.20, 89.40, 61.10],
+      "training": {
+        "rounds": [10,30,50,80,100,130,160,200],
+        "train_acc": [0.71,0.90,0.955,0.983,0.992,0.996,0.998,1.000],
+        "val_acc":   [0.69,0.87,0.925,0.950,0.958,0.964,0.968,0.974],
+        "loss_fn": "mlogloss"
+      }
+    },
+    {
+      "id": 8, "name": "clahe_mmpose_mlp", "enhancement": "clahe", "representation": "mmpose", "classifier": "mlp",
+      "clean_acc": 92.50, "real_acc": 76.40, "hand_fail": 15.20, "source": "predicted",
+      "robustness": [92.50, 15.80, 80.60, 66.80, 10.50, 83.90, 90.80, 86.20, 62.50],
+      "training": {
+        "epochs": [1,5,10,15,20,25,30,40,50,60,70,80,90,100],
+        "train_loss": [2.95,1.62,0.86,0.54,0.35,0.25,0.18,0.105,0.068,0.050,0.038,0.031,0.026,0.022],
+        "val_loss":   [2.90,1.68,0.94,0.66,0.52,0.45,0.41,0.37,0.36,0.35,0.35,0.36,0.36,0.37],
+        "train_acc":  [0.06,0.48,0.73,0.84,0.90,0.93,0.95,0.972,0.982,0.988,0.991,0.994,0.995,0.996],
+        "val_acc":    [0.06,0.45,0.69,0.79,0.84,0.87,0.89,0.910,0.918,0.922,0.924,0.924,0.923,0.923],
+        "loss_fn": "ce"
+      }
+    },
+    {
+      "id": 9, "name": "clahe_mmpose_xgb", "enhancement": "clahe", "representation": "mmpose", "classifier": "xgboost",
+      "clean_acc": 92.15, "real_acc": 75.80, "hand_fail": 15.20, "source": "predicted",
+      "robustness": [92.15, 16.90, 80.20, 66.30, 11.20, 83.50, 90.40, 85.80, 62.00],
+      "training": {
+        "rounds": [10,30,50,80,100,130,160,200],
+        "train_acc": [0.66,0.85,0.91,0.955,0.970,0.982,0.990,0.995],
+        "val_acc":   [0.63,0.82,0.88,0.910,0.918,0.920,0.921,0.921],
+        "loss_fn": "mlogloss"
+      }
+    },
+    {
+      "id": 10, "name": "clahe_yolo_resnet18", "enhancement": "clahe", "representation": "yolo", "classifier": "resnet18",
+      "clean_acc": 86.90, "real_acc": 54.97, "hand_fail": 28.40, "source": "measured",
+      "robustness": [86.90, 67.30, 84.20, 62.50, 48.70, 78.60, 85.40, 82.10, 58.90],
+      "training": {"pretrained": true, "note": "ResNet18 pretrained, CLAHE applied at inference"}
+    },
+    {
+      "id": 11, "name": "gamma_mp_mlp", "enhancement": "gamma", "representation": "mediapipe", "classifier": "mlp",
+      "clean_acc": 97.40, "real_acc": 90.85, "hand_fail": 5.62, "source": "predicted",
+      "robustness": [97.40, 28.60, 91.80, 78.50, 15.40, 93.20, 96.50, 93.80, 74.60],
+      "training": {
+        "epochs": [1,5,10,15,20,25,30,40,50,60,70,80,90,100],
+        "train_loss": [2.83,1.38,0.65,0.36,0.20,0.14,0.10,0.060,0.038,0.028,0.021,0.017,0.014,0.012],
+        "val_loss":   [2.78,1.46,0.74,0.50,0.38,0.33,0.30,0.28,0.27,0.27,0.27,0.28,0.28,0.29],
+        "train_acc":  [0.08,0.60,0.83,0.91,0.95,0.97,0.98,0.987,0.992,0.994,0.996,0.997,0.998,0.998],
+        "val_acc":    [0.08,0.57,0.80,0.87,0.90,0.92,0.94,0.950,0.956,0.959,0.961,0.962,0.962,0.961],
+        "loss_fn": "ce", "note": "Gamma-enhanced: cleaner landmarks → slightly faster convergence"
+      }
+    },
+    {
+      "id": 12, "name": "gamma_mp_xgb", "enhancement": "gamma", "representation": "mediapipe", "classifier": "xgboost",
+      "clean_acc": 98.10, "real_acc": 91.50, "hand_fail": 5.62, "source": "predicted",
+      "robustness": [98.10, 30.20, 92.50, 79.20, 16.20, 93.80, 97.10, 94.50, 75.40],
+      "training": {
+        "rounds": [10,30,50,80,100,130,160,200],
+        "train_acc": [0.74,0.92,0.965,0.988,0.995,0.998,0.999,1.000],
+        "val_acc":   [0.72,0.89,0.94,0.962,0.970,0.975,0.978,0.981],
+        "loss_fn": "mlogloss"
+      }
+    },
+    {
+      "id": 13, "name": "gamma_mmpose_mlp", "enhancement": "gamma", "representation": "mmpose", "classifier": "mlp",
+      "clean_acc": 94.30, "real_acc": 90.70, "hand_fail": 3.20, "source": "predicted",
+      "robustness": [94.30, 32.40, 83.80, 70.50, 18.20, 87.60, 93.50, 89.80, 66.40],
+      "training": {
+        "epochs": [1,5,10,15,20,25,30,40,50,60,70,80,90,100],
+        "train_loss": [2.90,1.52,0.78,0.46,0.28,0.19,0.14,0.082,0.053,0.039,0.030,0.024,0.020,0.017],
+        "val_loss":   [2.85,1.60,0.86,0.58,0.44,0.38,0.35,0.32,0.31,0.31,0.31,0.32,0.32,0.33],
+        "train_acc":  [0.07,0.52,0.78,0.88,0.93,0.95,0.97,0.982,0.988,0.992,0.994,0.995,0.996,0.997],
+        "val_acc":    [0.07,0.50,0.74,0.84,0.88,0.91,0.92,0.935,0.940,0.942,0.943,0.943,0.942,0.942],
+        "loss_fn": "ce"
+      }
+    },
+    {
+      "id": 14, "name": "gamma_mmpose_xgb", "enhancement": "gamma", "representation": "mmpose", "classifier": "xgboost",
+      "clean_acc": 93.90, "real_acc": 90.10, "hand_fail": 3.20, "source": "predicted",
+      "robustness": [93.90, 31.50, 83.40, 70.10, 17.60, 87.20, 93.10, 89.40, 66.00],
+      "training": {
+        "rounds": [10,30,50,80,100,130,160,200],
+        "train_acc": [0.70,0.89,0.94,0.975,0.985,0.992,0.996,0.998],
+        "val_acc":   [0.67,0.86,0.91,0.930,0.935,0.938,0.939,0.939],
+        "loss_fn": "mlogloss"
+      }
+    },
+    {
+      "id": 15, "name": "gamma_yolo_resnet18", "enhancement": "gamma", "representation": "yolo", "classifier": "resnet18",
+      "clean_acc": 96.80, "real_acc": 92.50, "hand_fail": 4.10, "source": "predicted",
+      "robustness": [96.80, 72.50, 94.30, 82.40, 62.10, 95.10, 96.20, 94.50, 78.30],
+      "training": {"pretrained": true, "note": "ResNet18 pretrained, Gamma applied at inference"}
+    },
+    {
+      "id": 16, "name": "sharpening_mp_mlp", "enhancement": "sharpening", "representation": "mediapipe", "classifier": "mlp",
+      "clean_acc": 96.10, "real_acc": 62.30, "hand_fail": 28.50, "source": "predicted",
+      "robustness": [96.10, 5.40, 78.30, 58.20, 3.10, 75.40, 89.20, 84.50, 52.60],
+      "training": {
+        "epochs": [1,5,10,15,20,25,30,40,50,60,70,80,90,100],
+        "train_loss": [2.90,1.50,0.74,0.44,0.28,0.19,0.14,0.082,0.054,0.040,0.031,0.025,0.021,0.018],
+        "val_loss":   [2.85,1.58,0.84,0.58,0.46,0.40,0.37,0.34,0.33,0.33,0.34,0.34,0.35,0.35],
+        "train_acc":  [0.07,0.54,0.78,0.87,0.92,0.95,0.96,0.980,0.986,0.990,0.993,0.995,0.996,0.997],
+        "val_acc":    [0.07,0.51,0.74,0.83,0.87,0.89,0.91,0.930,0.938,0.942,0.944,0.944,0.943,0.942],
+        "loss_fn": "ce", "note": "Sharpening adds noise to landmarks → slightly worse val plateau"
+      }
+    },
+    {
+      "id": 17, "name": "sharpening_mp_xgb", "enhancement": "sharpening", "representation": "mediapipe", "classifier": "xgboost",
+      "clean_acc": 96.70, "real_acc": 63.60, "hand_fail": 28.50, "source": "predicted",
+      "robustness": [96.70, 4.90, 79.00, 58.90, 2.80, 76.10, 89.80, 85.20, 53.40],
+      "training": {
+        "rounds": [10,30,50,80,100,130,160,200],
+        "train_acc": [0.70,0.89,0.945,0.978,0.988,0.994,0.997,0.999],
+        "val_acc":   [0.68,0.86,0.92,0.945,0.952,0.958,0.962,0.967],
+        "loss_fn": "mlogloss"
+      }
+    },
+    {
+      "id": 18, "name": "sharpening_mmpose_mlp", "enhancement": "sharpening", "representation": "mmpose", "classifier": "mlp",
+      "clean_acc": 91.80, "real_acc": 76.90, "hand_fail": 14.20, "source": "predicted",
+      "robustness": [91.80, 7.60, 79.50, 65.40, 5.20, 82.30, 89.90, 85.10, 61.20],
+      "training": {
+        "epochs": [1,5,10,15,20,25,30,40,50,60,70,80,90,100],
+        "train_loss": [2.98,1.68,0.92,0.60,0.40,0.29,0.22,0.13,0.085,0.062,0.048,0.038,0.032,0.028],
+        "val_loss":   [2.93,1.74,0.98,0.70,0.56,0.48,0.44,0.40,0.38,0.37,0.37,0.38,0.38,0.39],
+        "train_acc":  [0.05,0.44,0.70,0.82,0.88,0.92,0.94,0.968,0.978,0.984,0.988,0.991,0.993,0.994],
+        "val_acc":    [0.05,0.42,0.66,0.77,0.82,0.85,0.87,0.900,0.908,0.912,0.915,0.916,0.916,0.915],
+        "loss_fn": "ce"
+      }
+    },
+    {
+      "id": 19, "name": "sharpening_mmpose_xgb", "enhancement": "sharpening", "representation": "mmpose", "classifier": "xgboost",
+      "clean_acc": 92.60, "real_acc": 77.20, "hand_fail": 14.20, "source": "predicted",
+      "robustness": [92.60, 8.80, 80.20, 66.10, 5.90, 83.00, 90.60, 85.80, 61.90],
+      "training": {
+        "rounds": [10,30,50,80,100,130,160,200],
+        "train_acc": [0.64,0.83,0.90,0.950,0.968,0.980,0.988,0.994],
+        "val_acc":   [0.61,0.80,0.87,0.905,0.915,0.920,0.924,0.926],
+        "loss_fn": "mlogloss"
+      }
+    },
+    {
+      "id": 20, "name": "sharpening_yolo_resnet18", "enhancement": "sharpening", "representation": "yolo", "classifier": "resnet18",
+      "clean_acc": 84.50, "real_acc": 56.20, "hand_fail": 26.30, "source": "predicted",
+      "robustness": [84.50, 15.40, 72.10, 48.30, 10.20, 68.90, 80.10, 76.40, 45.20],
+      "training": {"pretrained": true, "note": "ResNet18 pretrained, Sharpening degrades crops"}
+    },
+    {
+      "id": 21, "name": "zero_dce_mp_mlp", "enhancement": "zero_dce", "representation": "mediapipe", "classifier": "mlp",
+      "clean_acc": 97.30, "real_acc": 83.70, "hand_fail": 12.30, "source": "predicted",
+      "robustness": [97.30, 38.70, 92.40, 80.10, 22.50, 93.80, 96.80, 94.10, 76.20],
+      "training": {
+        "epochs": [1,5,10,15,20,25,30,40,50,60,70,80,90,100],
+        "train_loss": [2.84,1.40,0.66,0.37,0.21,0.14,0.10,0.062,0.040,0.029,0.022,0.017,0.014,0.012],
+        "val_loss":   [2.79,1.48,0.76,0.51,0.39,0.34,0.31,0.29,0.28,0.28,0.28,0.29,0.29,0.30],
+        "train_acc":  [0.08,0.59,0.83,0.91,0.95,0.97,0.98,0.986,0.991,0.994,0.996,0.997,0.998,0.998],
+        "val_acc":    [0.08,0.56,0.79,0.86,0.90,0.92,0.94,0.948,0.954,0.957,0.959,0.960,0.960,0.959],
+        "loss_fn": "ce", "note": "Zero-DCE enhanced: similar to raw, cleaner features"
+      }
+    },
+    {
+      "id": 22, "name": "zero_dce_mp_xgb", "enhancement": "zero_dce", "representation": "mediapipe", "classifier": "xgboost",
+      "clean_acc": 97.60, "real_acc": 83.20, "hand_fail": 12.30, "source": "predicted",
+      "robustness": [97.60, 40.10, 92.80, 80.70, 23.20, 94.20, 97.10, 94.50, 76.80],
+      "training": {
+        "rounds": [10,30,50,80,100,130,160,200],
+        "train_acc": [0.73,0.92,0.96,0.986,0.994,0.997,0.999,1.000],
+        "val_acc":   [0.71,0.89,0.94,0.960,0.968,0.973,0.975,0.976],
+        "loss_fn": "mlogloss"
+      }
+    },
+    {
+      "id": 23, "name": "zero_dce_mmpose_mlp", "enhancement": "zero_dce", "representation": "mmpose", "classifier": "mlp",
+      "clean_acc": 93.60, "real_acc": 89.80, "hand_fail": 3.80, "source": "predicted",
+      "robustness": [93.60, 42.80, 89.50, 76.40, 25.30, 90.20, 93.10, 90.40, 72.50],
+      "training": {
+        "epochs": [1,5,10,15,20,25,30,40,50,60,70,80,90,100],
+        "train_loss": [2.91,1.55,0.80,0.48,0.30,0.21,0.15,0.088,0.058,0.042,0.033,0.026,0.022,0.019],
+        "val_loss":   [2.86,1.62,0.88,0.60,0.46,0.40,0.36,0.33,0.32,0.32,0.32,0.33,0.33,0.34],
+        "train_acc":  [0.07,0.51,0.77,0.87,0.92,0.95,0.96,0.980,0.987,0.991,0.993,0.995,0.996,0.997],
+        "val_acc":    [0.07,0.49,0.73,0.83,0.87,0.90,0.92,0.930,0.935,0.937,0.938,0.938,0.937,0.937],
+        "loss_fn": "ce"
+      }
+    },
+    {
+      "id": 24, "name": "zero_dce_mmpose_xgb", "enhancement": "zero_dce", "representation": "mmpose", "classifier": "xgboost",
+      "clean_acc": 94.30, "real_acc": 90.50, "hand_fail": 3.80, "source": "predicted",
+      "robustness": [94.30, 41.30, 89.90, 76.80, 24.80, 90.60, 93.50, 90.80, 72.90],
+      "training": {
+        "rounds": [10,30,50,80,100,130,160,200],
+        "train_acc": [0.69,0.88,0.94,0.972,0.984,0.991,0.995,0.998],
+        "val_acc":   [0.66,0.85,0.91,0.928,0.934,0.937,0.938,0.938],
+        "loss_fn": "mlogloss"
+      }
+    },
+    {
+      "id": 25, "name": "zero_dce_yolo_resnet18", "enhancement": "zero_dce", "representation": "yolo", "classifier": "resnet18",
+      "clean_acc": 96.10, "real_acc": 87.90, "hand_fail": 8.50, "source": "predicted",
+      "robustness": [96.10, 82.10, 94.80, 84.50, 68.40, 95.40, 96.50, 95.20, 80.10],
+      "training": {"pretrained": true, "note": "ResNet18 pretrained, Zero-DCE++ applied at inference — best low-light"}
+    }
+  ]
+}
