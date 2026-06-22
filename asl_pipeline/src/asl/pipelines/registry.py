@@ -69,6 +69,14 @@ def register_defaults() -> None:
     register("mediapipe_crop_resnet18", MediaPipeCropRepresentation, ResNet18ASLRecognizer)
     register("mediapipe_crop_vit", MediaPipeCropRepresentation, HFImageClassifier)
 
+    # YOLO hand crop → classifier
+    from ..representations.yolo_crop import YOLOCropRepresentation
+    YOLO_WEIGHTS = "weights/yolo_hand.pt"
+    register("yolo_crop_resnet18", YOLOCropRepresentation, ResNet18ASLRecognizer,
+             repr_kwargs={"model_path": YOLO_WEIGHTS})
+    register("yolo_crop_vit", YOLOCropRepresentation, HFImageClassifier,
+             repr_kwargs={"model_path": YOLO_WEIGHTS})
+
     # === P3: Landmarks → classifier (landmark classifier swap) ===
     register("landmark_mlp", MediaPipeLandmarksRepresentation, LandmarkMLPRecognizer)
     register("mediapipe_landmarks_mlp", MediaPipeLandmarksRepresentation, LandmarkMLPRecognizer)
