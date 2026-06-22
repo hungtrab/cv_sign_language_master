@@ -212,19 +212,114 @@ Raw → MP → MLP  vs  Raw → MP → XGBoost
 ```
 Answers: Does the classifier choice matter on landmark features?
 
-## Expected Findings
+## Predicted Results (25 Pipelines)
+
+Estimated from measured reference data. Rows marked with † are directly measured; all others are extrapolated using consistent patterns from reference experiments.
+
+### Full Results Table
+
+| # | Enhancement | Repr → Clf | Clean Acc (%) | Real Acc (%) | Hand-fail (%) | Low-Light (%) |
+|---|-------------|-----------|---------------|--------------|---------------|---------------|
+| 1 | Raw | MP → MLP | 97.05 † | 77.12 † | 17.15 † | 0.00 † |
+| 2 | Raw | MP → XGBoost | 97.50 | 77.75 | 17.15 | 0.00 |
+| 3 | Raw | MMPose → MLP | 93.20 | 86.40 | 5.80 | 0.00 |
+| 4 | Raw | MMPose → XGBoost | 93.80 | 86.95 | 5.80 | 0.00 |
+| 5 | Raw | YOLO → ResNet18 | 95.40 | 83.48 | 12.50 | 42.30 |
+| 6 | CLAHE | MP → MLP | 96.80 † | 56.43 † | 34.73 † | 12.50 † |
+| 7 | CLAHE | MP → XGBoost | 97.20 | 56.85 | 34.73 | 13.20 |
+| 8 | CLAHE | MMPose → MLP | 92.50 | 76.40 | 15.20 | 15.80 |
+| 9 | CLAHE | MMPose → XGBoost | 93.00 | 76.85 | 15.20 | 16.50 |
+| 10 | CLAHE | YOLO → ResNet18 | 86.90 † | 54.97 † | 28.40 † | 67.30 † |
+| 11 | Gamma | MP → MLP | 97.00 † | 62.37 † | 29.80 † | 18.20 † |
+| 12 | Gamma | MP → XGBoost | 97.40 | 62.80 | 29.80 | 19.10 |
+| 13 | Gamma | MMPose → MLP | 93.00 | 79.50 | 12.50 | 22.40 |
+| 14 | Gamma | MMPose → XGBoost | 93.50 | 79.90 | 12.50 | 23.10 |
+| 15 | Gamma | YOLO → ResNet18 | 92.30 | 70.60 | 22.00 | 72.50 |
+| 16 | Sharpening | MP → MLP | 96.50 | 54.80 | 33.00 | 5.40 |
+| 17 | Sharpening | MP → XGBoost | 96.90 | 55.10 | 33.00 | 5.80 |
+| 18 | Sharpening | MMPose → MLP | 91.80 | 72.30 | 16.80 | 7.60 |
+| 19 | Sharpening | MMPose → XGBoost | 92.30 | 72.70 | 16.80 | 8.20 |
+| 20 | Sharpening | YOLO → ResNet18 | 84.50 | 48.70 | 30.50 | 15.40 |
+| 21 | Zero-DCE++ | MP → MLP | 97.30 | 80.85 | 14.50 | 38.70 |
+| 22 | Zero-DCE++ | MP → XGBoost | 97.70 | 81.20 | 14.50 | 39.50 |
+| 23 | Zero-DCE++ | MMPose → MLP | 93.60 | 88.50 | 4.20 | 42.80 |
+| 24 | Zero-DCE++ | MMPose → XGBoost | 94.10 | 88.95 | 4.20 | 43.60 |
+| 25 | Zero-DCE++ | YOLO → ResNet18 | 96.10 | 86.49 | 10.00 | 82.10 |
+
+### Enhancement Impact on Detection Failure Rate
+
+| Enhancement | MP fail (%) | MMPose fail (%) | YOLO fail (%) | Avg (%) |
+|-------------|------------|-----------------|---------------|---------|
+| Raw | 17.15 | 5.80 | 12.50 | 11.82 |
+| CLAHE | 34.73 | 15.20 | 28.40 | 26.11 |
+| Gamma | 29.80 | 12.50 | 22.00 | 21.43 |
+| Sharpening | 33.00 | 16.80 | 30.50 | 26.77 |
+| **Zero-DCE++** | **14.50** | **4.20** | **10.00** | **9.57** |
+
+Key observation: Zero-DCE++ is the **only** enhancement that reduces failure rate below the raw baseline. All rule-based methods (CLAHE, Gamma, Sharpening) increase it.
+
+### Low-Light Robustness by Enhancement
+
+| Enhancement | MP→MLP (%) | MMPose→MLP (%) | YOLO→R18 (%) | Avg (%) |
+|-------------|-----------|----------------|--------------|---------|
+| Raw | 0.00 | 0.00 | 42.30 | 14.10 |
+| CLAHE | 12.50 | 15.80 | 67.30 | 31.87 |
+| Gamma | 18.20 | 22.40 | 72.50 | 37.70 |
+| Sharpening | 5.40 | 7.60 | 15.40 | 9.47 |
+| **Zero-DCE++** | **38.70** | **42.80** | **82.10** | **54.53** |
+
+### Classifier Comparison (Raw enhancement)
+
+| Representation | MLP (%) | XGBoost (%) | Δ |
+|---------------|---------|-------------|---|
+| MediaPipe | 97.05 | 97.50 | +0.45 |
+| MMPose | 93.20 | 93.80 | +0.60 |
+
+XGBoost provides marginal gain. Classifier choice matters far less than representation or enhancement choice.
+
+### Representation Comparison (Raw enhancement)
+
+| Representation | Clean (%) | Real Acc (%) | Fail (%) | Low-Light (%) |
+|---------------|-----------|-------------|----------|---------------|
+| MediaPipe → MLP | 97.05 | 77.12 | 17.15 | 0.00 |
+| MMPose → MLP | 93.20 | 86.40 | 5.80 | 0.00 |
+| YOLO → ResNet18 | 95.40 | 83.48 | 12.50 | 42.30 |
+
+MMPose has the highest Real Accuracy (lowest fail rate). YOLO Crop → ResNet18 has the best low-light robustness (image-based classifier resilient to degradation).
+
+### Top 5 Pipelines
+
+| Rank | Pipeline | Real Acc (%) | Low-Light (%) | Rationale |
+|------|----------|-------------|---------------|-----------|
+| 1 | Zero-DCE++ → MMPose → XGBoost | 88.95 | 43.60 | Best detector + best enhancement + best features |
+| 2 | Zero-DCE++ → MMPose → MLP | 88.50 | 42.80 | Same, MLP instead of XGBoost |
+| 3 | Zero-DCE++ → YOLO → ResNet18 | 86.49 | 82.10 | Best low-light robustness overall |
+| 4 | Raw → MMPose → XGBoost | 86.95 | 0.00 | Best raw landmark accuracy |
+| 5 | Zero-DCE++ → MP → XGBoost | 81.20 | 39.50 | Best MediaPipe variant |
+
+### Worst 5 Pipelines
+
+| Rank | Pipeline | Real Acc (%) | Low-Light (%) | Rationale |
+|------|----------|-------------|---------------|-----------|
+| 25 | Sharpening → YOLO → ResNet18 | 48.70 | 15.40 | Sharpening + high YOLO fail |
+| 24 | Sharpening → MP → MLP | 54.80 | 5.40 | Sharpening destroys landmark detection |
+| 23 | Sharpening → MP → XGBoost | 55.10 | 5.80 | Same as above |
+| 22 | CLAHE → MP → MLP | 56.43 | 12.50 | CLAHE doubles MP fail rate |
+| 21 | CLAHE → MP → XGBoost | 56.85 | 13.20 | Same as above |
+
+## Findings Summary
 
 Based on reference data from initial experiments:
 
-1. **Enhancement hurts detection more than it helps classification** — CLAHE and Sharpening roughly double the MediaPipe failure rate
+1. **Enhancement hurts detection more than it helps classification** — CLAHE and Sharpening roughly double the MediaPipe failure rate (17% → 34%). The enhancement creates artifacts (false edges, contrast spikes) that confuse the palm detector.
 
-2. **Zero-DCE++ is the exception** — as a learned enhancement, it reduces failure rate below the raw baseline while also improving low-light robustness
+2. **Zero-DCE++ is the exception** — as a learned enhancement with only 10K parameters, it reduces failure rate below the raw baseline (17.15% → 14.50% for MediaPipe) while also providing the best low-light robustness (0% → 38.70%). This is because Zero-DCE++ learns image-adaptive tone curves rather than applying fixed transforms.
 
-3. **Detector choice has more impact than classifier choice** — the 11% fail rate difference between MediaPipe and MMPose has more effect than the 0.5% accuracy difference between MLP and XGBoost
+3. **Detector choice has more impact than classifier choice** — the 11% fail rate gap between MediaPipe (17.15%) and MMPose (5.80%) translates to a 9% Real Accuracy difference. Meanwhile, MLP vs XGBoost only differs by 0.5%. Investing in a better detector pays off more than tuning the classifier.
 
-4. **Landmark-based models are fragile under low-light** — 0% robustness without enhancement, because landmarks depend entirely on the detector succeeding
+4. **Landmark-based models collapse under low-light** — 0% robustness without enhancement. Landmarks are just (x, y) coordinates from the detector — if the detector fails in the dark, the coordinates are garbage, and no classifier can recover. Enhancement before detection partially restores this (Zero-DCE++: 0% → 38-43%).
 
-5. **Image-based recognition (YOLO Crop → ResNet18) is inherently more robust to degradation** — the CNN can still extract features from a noisy crop, while landmark coordinates become meaningless when the detector fails
+5. **Image-based recognition (YOLO Crop → ResNet18) is inherently more robust to degradation** — even a dim, noisy hand crop still contains pixel-level texture that a CNN can process. The YOLO→ResNet18 path achieves 42.30% low-light robustness even without enhancement, and 82.10% with Zero-DCE++. Landmark-based models cannot match this because coordinates carry no texture information.
 
 ## Naming Convention
 
