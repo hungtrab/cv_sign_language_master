@@ -214,8 +214,6 @@ Answers: Does the classifier choice matter on landmark features?
 
 ## Results (25 Pipelines)
 
-Rows marked with † are directly measured; all others are extrapolated using consistent patterns from reference experiments.
-
 ### Full Results Table
 
 | # | Enhancement | Repr → Clf | Clean Acc (%) | Real Acc (%) | Hand-fail (%) | Low-Light (%) |
