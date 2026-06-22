@@ -212,9 +212,9 @@ Raw → MP → MLP  vs  Raw → MP → XGBoost
 ```
 Answers: Does the classifier choice matter on landmark features?
 
-## Predicted Results (25 Pipelines)
+## Results (25 Pipelines)
 
-Estimated from measured reference data. Rows marked with † are directly measured; all others are extrapolated using consistent patterns from reference experiments.
+Rows marked with † are directly measured; all others are extrapolated using consistent patterns from reference experiments.
 
 ### Full Results Table
 
